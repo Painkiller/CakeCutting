@@ -1,0 +1,4 @@
+[Project]
+Name=CakeCutting
+Manager=KDevCMakeManager
+VersionControl=kdevgit
