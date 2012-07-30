@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     player_b.choose(cake);
     
     //print
-    
+    std::cout<<"puppa"<<std::endl;
     
     
     return 0;
