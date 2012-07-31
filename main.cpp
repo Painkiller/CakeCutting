@@ -1,12 +1,17 @@
 #include <iostream>
+
 #include "player.h"
+#include "referee.h"
 #include "cake.h"
+
 int main(int argc, char **argv) 
 {    
     Cake *cake = new Cake();
    
     Player *player_a = new Player("A", cake);
     Player *player_b = new Player("B", cake);
+    
+    Referee *referee = new Referee(cake);
     
     //building cake
     cake->build_cake();
