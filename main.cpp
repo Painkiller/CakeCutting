@@ -2,9 +2,11 @@
 #include "player.h"
 #include "cake.h"
 int main(int argc, char **argv) 
-{
-    Player player_a, player_b;
+{    
     Cake *cake = new Cake();
+   
+    Player *player_a = new Player("A", cake);
+    Player *player_b = new Player("B", cake);
     
     //building cake
     cake->build_cake();
@@ -13,22 +15,21 @@ int main(int argc, char **argv)
     
     //building players' evaluations
     
-    player_a.build_evaluation_map();
-    player_b.build_evaluation_map();
+    player_a->build_evaluation_map();
+    player_b->build_evaluation_map();
     
     //evaluation
-    player_a.calculate_total_evaluation(cake);
+    player_a->calculate_total_evaluation();
     
-    player_a.print_total_evaluation();
+    player_a->print_total_evaluation();
     
     //cut
-    player_a.cut(cake);
+    player_a->cut();
     
     //choose
-    player_b.choose(cake);
+    player_b->choose();
     
     //print
-    std::cout<<"puppa"<<std::endl;
     
     
     return 0;

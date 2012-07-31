@@ -1,8 +1,9 @@
 #include "player.h"
 
-Player::Player()
+Player::Player(string id, Cake* cake)
 {
-
+    m_id = id;
+    m_cake = cake;
 }
 
 Player::~Player()
@@ -25,7 +26,7 @@ void Player::build_evaluation_map()
      cout<<endl;
 }
 
-void Player::calculate_total_evaluation(Cake *cake)
+void Player::calculate_total_evaluation()
 {
     int type;
     
@@ -33,7 +34,7 @@ void Player::calculate_total_evaluation(Cake *cake)
     
     for(int i = 0; i < N_SECTORS; i++)
     {
-	type = cake->get_type_at(i);
+	type = m_cake->get_type_at(i);
 	m_result += m_evaluation_map.find(type)->second;
     }
 }
@@ -44,7 +45,7 @@ void Player::print_total_evaluation()
     cout << m_result << endl;
 }
 
-void Player::cut(Cake* cake)
+void Player::cut()
 {
     int type;
     int i = 0;
@@ -55,21 +56,21 @@ void Player::cut(Cake* cake)
     
     while(half >= ev)
     {
-	type = cake->get_type_at(i);
+	type = m_cake->get_type_at(i);
 	ev += m_evaluation_map.find(type)->second;
 	i++;
     }
     diff = ev - half;
     part = diff / m_evaluation_map.find(type)->second;
     
-    cake->set_cut(i, part);
+    m_cake->set_cut(i, part);
 }
 
-void Player::choose(Cake* cake)
+void Player::choose()
 {
     int type;
-    int cut = cake->get_cut();
-    float part = cake->get_partial();
+    int cut = m_cake->get_cut();
+    float part = m_cake->get_partial();
     float first_ev, second_ev;
     
     first_ev = 0;
@@ -77,7 +78,7 @@ void Player::choose(Cake* cake)
     
     for(int i = 0; i < cut; i++)
     {
-	type = cake->get_type_at(i);
+	type = m_cake->get_type_at(i);
 	first_ev+= m_evaluation_map.find(type)->second;
     }
     
@@ -85,7 +86,7 @@ void Player::choose(Cake* cake)
     cout << "Player B evaluates the first piece of cake as: "<< first_ev <<  endl;
     for(int i = cut + 1 ; i < N_SECTORS; i++)
     {
-	type = cake->get_type_at(i);
+	type = m_cake->get_type_at(i);
 	second_ev += m_evaluation_map.find(type)->second;
     }
     
