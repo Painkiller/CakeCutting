@@ -4,6 +4,10 @@
 #include "referee.h"
 #include "cake.h"
 
+void cut_and_choose(Player *player_a, Player *player_b);
+
+void surplus_procedure(Player *player_a, Player *player_b, Referee *referee);
+
 int main(int argc, char **argv) 
 {    
     Cake *cake = new Cake();
@@ -23,6 +27,22 @@ int main(int argc, char **argv)
     player_a->build_evaluation_map();
     player_b->build_evaluation_map();
     
+    
+    //***Cut & Choose Method***
+    
+    cut_and_choose(player_a, player_b);
+    
+    //Clear previous cuts
+    cake->clear_cuts();
+    
+    //***Surplus Procedure**
+    
+    
+    return 0;
+}
+
+void cut_and_choose(Player *player_a, Player *player_b)
+{ 
     //evaluation
     player_a->calculate_total_evaluation();
     
@@ -33,9 +53,9 @@ int main(int argc, char **argv)
     
     //choose
     player_b->choose();
+}
+
+void surplus_procedure(Player *player_a, Player *player_b, Referee *referee)
+{
     
-    //print
-    
-    
-    return 0;
 }

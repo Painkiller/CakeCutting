@@ -8,6 +8,7 @@ class Referee : public Entity
 public:
     Referee(Cake *cake);
     virtual ~Referee();
+    void cut();
 };
 
 #endif // REFEREE_H

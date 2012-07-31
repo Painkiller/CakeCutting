@@ -10,3 +10,7 @@ Referee::~Referee()
 
 }
 
+void Referee::cut()
+{
+
+}

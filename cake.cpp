@@ -25,13 +25,6 @@ int Cake::get_type_at(int pos)
     return m_sectors[pos];
 }
 
-void Cake::set_cut(int cut, float partial)
-{
-    m_cut = cut;
-    m_partial = partial;
-    cout << "Player A cuts the cake at sector " << m_cut << " with percentage " << m_partial << endl;
-}
-
 void Cake::print_sectors()
 {
     cout << "Sectors in the cake:" << endl;

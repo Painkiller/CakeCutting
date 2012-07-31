@@ -69,7 +69,7 @@ void Player::cut()
 void Player::choose()
 {
     int type;
-    int cut = m_cake->get_cut();
+    int cut = m_cake->get_cut(0);
     float part = m_cake->get_partial();
     float first_ev, second_ev;
     
