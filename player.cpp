@@ -40,9 +40,34 @@ void Player::calculate_total_evaluation()
     m_halfpoint = m_result / 2;
 }
 
+void Player::calculate_piece_evaluation()
+{
+    int type;
+    
+    int sect_begin = m_piece_assigned.m_begin.m_sector;
+    int sect_end = m_piece_assigned.m_end.m_sector;
+    
+    float part_begin = m_piece_assigned.m_begin.m_part;
+    float part_end = m_piece_assigned.m_end.m_part;
+    
+    type = m_cake->get_type_at(sect_begin);
+    m_piece_result = m_evaluation_map.find(type)->second * part_begin;
+    
+    for(int i = sect_begin + 1; i < sect_end - 1; i++)
+    {
+	type = m_cake->get_type_at(i);
+	m_piece_result += m_evaluation_map.find(type)->second;
+    }
+    
+    type = m_cake->get_type_at(sect_end);
+    m_piece_result = m_evaluation_map.find(type)->second * part_end;
+    
+}
+
+
 void Player::print_total_evaluation()
 {
-    cout << "Player A evaluates the whole cake as:" << endl;
+    cout << "Player "<< m_id << " evaluates the whole cake as:" << endl;
     cout << m_result << endl;
 }
 

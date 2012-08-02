@@ -18,6 +18,7 @@ public:
     virtual ~Player();
     void build_evaluation_map();
     void calculate_total_evaluation();
+    void calculate_piece_evaluation();
     void print_total_evaluation();
     void print_piece_info();
     void cut();
@@ -31,6 +32,7 @@ private:
   
   
     float m_result;
+    float m_piece_result;
     float m_halfpoint;
     
     int m_chosen;
