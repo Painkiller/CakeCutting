@@ -46,11 +46,21 @@ void Player::print_total_evaluation()
     cout << m_result << endl;
 }
 
+void Player::print_piece_info()
+{
+    cout << endl;
+	
+    cout << "Player "<< m_id << " piece of cake is:" << endl;
+    
+    cout << "From sector " << m_piece_assigned.m_begin.m_sector << " perc " << m_piece_assigned.m_begin.m_part << endl;
+    cout << "From sector " << m_piece_assigned.m_end.m_sector << " perc " << m_piece_assigned.m_end.m_part << endl;
+    
+    cout << endl;
+}
+
 void Player::cut()
 {
-
     calculate_cut();
-
 }
 
 void Player::choose()

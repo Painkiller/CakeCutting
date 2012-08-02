@@ -15,6 +15,12 @@ struct CakeCut
     float m_part;
 };
 
+struct Piece
+{
+    CakeCut m_begin;
+    CakeCut m_end;
+};
+
 class Cake
 {
 
@@ -34,14 +40,16 @@ public:
 	ck.m_id = player_id;
 	
 	m_cake_cut.push_back(ck);
-	cout << "Player A cuts the cake at sector " << cut << " with percentage " << partial << endl;
+	cout << "Player " << player_id << " cuts the cake at sector " << cut << " with percentage " << partial << endl;
     }
 
     inline CakeCut get_cake_cut(int pos){return m_cake_cut[pos];}
+    inline vector<CakeCut> get_cake_cut_list(){return m_cake_cut;}
 
     inline void clear_cuts(){m_cut.clear();}
 	
     void print_sectors();
+    int get_size(){return m_sectors.size();}
 
 private:
     float m_partial;

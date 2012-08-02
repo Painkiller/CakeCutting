@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     cake->clear_cuts();
     
     //***Surplus Procedure**
-    
+    surplus_procedure(player_a, player_b, referee);
     
     return 0;
 }
@@ -60,5 +60,16 @@ void surplus_procedure(Player *player_a, Player *player_b, Referee *referee)
     player_a->calculate_total_evaluation();
     player_b->calculate_total_evaluation();
     
-//     referee->cut(player_a->get_halfpoint);
+    player_a->cut();
+    player_b->cut();
+    
+    referee->assign_player(player_a);
+    referee->assign_player(player_b);
+    
+    referee->handle_halfpoints();
+    
+    player_a->print_piece_info();
+    player_b->print_piece_info();
+    
+    
 }
