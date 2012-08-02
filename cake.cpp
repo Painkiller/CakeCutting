@@ -3,7 +3,7 @@
 
 Cake::Cake()
 {
-    m_sectors = new int[N_SECTORS];
+  
 }
 
 Cake::~Cake()
@@ -13,10 +13,14 @@ Cake::~Cake()
 
 void Cake::build_cake()
 {
+    int value;
+    
     srand(time(0));
+    
     for(int i = 0; i < N_SECTORS; i++)
     {
-	m_sectors[i] = rand() % N_SECTOR_TYPE;
+	value = rand() % N_SECTOR_TYPE;
+	m_sectors.push_back(value);
     }
 }
 

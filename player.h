@@ -20,13 +20,19 @@ public:
     void print_total_evaluation();
     void cut();
     void choose();
-
     
 private:
-    string m_id;
-    map<int, float> m_evaluation_map;
+    void calculate_cut();
+  
+  
     float m_result;
+    float m_halfpoint;
+    
     int m_chosen;
+
+    string m_id;
+    
+    map<int, float> m_evaluation_map;
 };
 
 #endif // PLAYER_H

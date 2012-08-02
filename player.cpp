@@ -37,6 +37,7 @@ void Player::calculate_total_evaluation()
 	type = m_cake->get_type_at(i);
 	m_result += m_evaluation_map.find(type)->second;
     }
+    m_halfpoint = m_result / 2;
 }
 
 void Player::print_total_evaluation()
@@ -47,23 +48,9 @@ void Player::print_total_evaluation()
 
 void Player::cut()
 {
-    int type;
-    int i = 0;
-    
-    float diff, part;
-    float half = m_result / 2;
-    float ev = 0;
-    
-    while(half >= ev)
-    {
-	type = m_cake->get_type_at(i);
-	ev += m_evaluation_map.find(type)->second;
-	i++;
-    }
-    diff = ev - half;
-    part = diff / m_evaluation_map.find(type)->second;
-    
-    m_cake->set_cut(i, part);
+
+    calculate_cut();
+
 }
 
 void Player::choose()
@@ -79,7 +66,7 @@ void Player::choose()
     for(int i = 0; i < cut; i++)
     {
 	type = m_cake->get_type_at(i);
-	first_ev+= m_evaluation_map.find(type)->second;
+	first_ev += m_evaluation_map.find(type)->second;
     }
     
     first_ev += m_evaluation_map.find(cut)->second * part;
@@ -96,4 +83,24 @@ void Player::choose()
       m_chosen = 1;
     else
       m_chosen = 2;
+}
+
+void Player::calculate_cut()
+{
+    int type;
+    int i = 0;
+    
+    float diff, part;
+    float ev = 0;
+    
+    while(m_halfpoint >= ev)
+    {
+	type = m_cake->get_type_at(i);
+	ev += m_evaluation_map.find(type)->second;
+	i++;
+    }
+    diff = ev - m_halfpoint;
+    part = diff / m_evaluation_map.find(type)->second;
+    
+    m_cake->set_cut(i, part, m_id);
 }

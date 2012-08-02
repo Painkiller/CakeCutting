@@ -57,5 +57,8 @@ void cut_and_choose(Player *player_a, Player *player_b)
 
 void surplus_procedure(Player *player_a, Player *player_b, Referee *referee)
 {
+    player_a->calculate_total_evaluation();
+    player_b->calculate_total_evaluation();
     
+//     referee->cut(player_a->get_halfpoint);
 }

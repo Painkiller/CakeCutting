@@ -8,6 +8,13 @@
 
 using namespace std;
 
+struct CakeCut
+{
+    string m_id;
+    int m_sector;
+    float m_part;
+};
+
 class Cake
 {
 
@@ -18,25 +25,30 @@ public:
     void build_cake();
     int get_type_at(int pos);
     
-    inline int get_cut(int pos){return m_cut.at(pos);}
-    inline void set_cut(int cut, float partial)
+    inline void set_cake_cut(int cut, float partial, string player_id)
     {
-	m_cut.push_back(cut);
-	m_partial = partial;
+	CakeCut ck;
+	
+	ck.m_sector = cut;
+	ck.m_part = partial;
+	ck.m_id = player_id;
+	
+	m_cake_cut.push_back(ck);
 	cout << "Player A cuts the cake at sector " << cut << " with percentage " << m_partial << endl;
     }
 
-    inline float get_partial(){return m_partial;}
-    
+    inline CakeCut get_cake_cut(int pos){return m_cake_cut[pos];}
+
     inline void clear_cuts(){m_cut.clear();}
 	
     void print_sectors();
 
-    
 private:
-    int *m_sectors;
-    vector<int> m_cut;
     float m_partial;
+    
+    vector<int> m_sectors;
+    vector<int> m_cut;
+    
+    vector<CakeCut> m_cake_cut;
 };
-
 #endif // CAKE_H
