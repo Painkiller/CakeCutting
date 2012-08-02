@@ -34,7 +34,7 @@ public:
 	ck.m_id = player_id;
 	
 	m_cake_cut.push_back(ck);
-	cout << "Player A cuts the cake at sector " << cut << " with percentage " << m_partial << endl;
+	cout << "Player A cuts the cake at sector " << cut << " with percentage " << partial << endl;
     }
 
     inline CakeCut get_cake_cut(int pos){return m_cake_cut[pos];}

@@ -56,28 +56,28 @@ void Player::cut()
 void Player::choose()
 {
     int type;
-    int cut = m_cake->get_cut(0);
-    float part = m_cake->get_partial();
+    CakeCut ck = m_cake->get_cake_cut(0);
+
     float first_ev, second_ev;
     
     first_ev = 0;
     second_ev = 0;
     
-    for(int i = 0; i < cut; i++)
+    for(int i = 0; i < ck.m_sector; i++)
     {
 	type = m_cake->get_type_at(i);
 	first_ev += m_evaluation_map.find(type)->second;
     }
     
-    first_ev += m_evaluation_map.find(cut)->second * part;
+    first_ev += m_evaluation_map.find(ck.m_sector)->second * ck.m_part;
     cout << "Player B evaluates the first piece of cake as: "<< first_ev <<  endl;
-    for(int i = cut + 1 ; i < N_SECTORS; i++)
+    for(int i = ck.m_sector + 1 ; i < N_SECTORS; i++)
     {
 	type = m_cake->get_type_at(i);
 	second_ev += m_evaluation_map.find(type)->second;
     }
     
-    second_ev += m_evaluation_map.find(cut)->second * (1 - part);
+    second_ev += m_evaluation_map.find(ck.m_sector)->second * (1 - ck.m_part);
     cout << "Player B evaluates the second piece of cake as: "<< second_ev <<  endl;
     if(first_ev > second_ev)
       m_chosen = 1;
@@ -102,5 +102,5 @@ void Player::calculate_cut()
     diff = ev - m_halfpoint;
     part = diff / m_evaluation_map.find(type)->second;
     
-    m_cake->set_cut(i, part, m_id);
+    m_cake->set_cake_cut(i, part, m_id);
 }
