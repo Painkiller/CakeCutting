@@ -23,9 +23,10 @@ public:
     void print_piece_info();
     void cut();
     void choose();
+    
     inline void set_piece(Piece piece){m_piece_assigned = piece;}
-    string& get_id(){return m_id;}
-
+    inline string& get_id(){return m_id;}
+    inline map<int, float> get_evaluation_map(){return m_evaluation_map;}
     
 private:
     void calculate_cut();

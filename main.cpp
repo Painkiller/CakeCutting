@@ -34,7 +34,9 @@ int main(int argc, char **argv)
     
     //Clear previous cuts
     cake->clear_cuts();
-    
+    cout << endl;
+    cout <<"*************SURPLUS PROCEDURE************" << endl;
+    cout << endl;
     //***Surplus Procedure**
     surplus_procedure(player_a, player_b, referee);
     
@@ -71,5 +73,5 @@ void surplus_procedure(Player *player_a, Player *player_b, Referee *referee)
     player_a->print_piece_info();
     player_b->print_piece_info();
     
-    
+    referee->handle_middle();
 }

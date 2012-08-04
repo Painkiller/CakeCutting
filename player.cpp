@@ -61,7 +61,6 @@ void Player::calculate_piece_evaluation()
     
     type = m_cake->get_type_at(sect_end);
     m_piece_result = m_evaluation_map.find(type)->second * part_end;
-    
 }
 
 

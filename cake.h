@@ -46,7 +46,7 @@ public:
     inline CakeCut get_cake_cut(int pos){return m_cake_cut[pos];}
     inline vector<CakeCut> get_cake_cut_list(){return m_cake_cut;}
 
-    inline void clear_cuts(){m_cut.clear();}
+    inline void clear_cuts(){m_cake_cut.clear();}
 	
     void print_sectors();
     int get_size(){return m_sectors.size();}
