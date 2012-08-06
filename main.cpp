@@ -7,9 +7,13 @@
 void cut_and_choose(Player *player_a, Player *player_b);
 
 void surplus_procedure(Player *player_a, Player *player_b, Referee *referee);
+void equitability_procedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee);
+
 
 int main(int argc, char **argv) 
 {    
+    srand(time(0));
+
     Cake *cake = new Cake();
    
     Player *player_a = new Player("A", cake);
@@ -39,6 +43,18 @@ int main(int argc, char **argv)
     cout << endl;
     //***Surplus Procedure**
     surplus_procedure(player_a, player_b, referee);
+    
+    cake->clear_cuts();
+    referee->clear_pieces();
+    
+    cout << endl;
+    cout <<"*************EQUITABILITY PROCEDURE************" << endl;
+    cout << endl;
+    
+    Player *player_c = new Player("B", cake);
+    player_c->build_evaluation_map();
+    
+    equitability_procedure(player_a, player_b, player_c, referee);
     
     return 0;
 }
@@ -74,4 +90,10 @@ void surplus_procedure(Player *player_a, Player *player_b, Referee *referee)
     player_b->print_piece_info();
     
     referee->handle_middle();
+}
+
+void equitability_procedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee)
+{
+    referee->assign_player(player_c);
+    referee->handle_equitability();
 }

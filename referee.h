@@ -18,6 +18,9 @@ public:
     void calculate_total_evaluation();
     void calculate_piece_evaluation(int sect_begin, int sect_end, float point_begin, float point_end, map<int, float> evaluation_map, float &result);
     void handle_middle();
+    void handle_equitability();
+    
+    inline void clear_pieces(){m_pieces_assigned.clear();}
     
 private:
     map<Player*, map< int, float> > m_players_assigned;
@@ -28,6 +31,7 @@ private:
     Player* get_player_by_id(string m_id);
     int find_eq_sector();
     float find_eq_point(int arg1);
+    void find_eq_sector_multi(int& sector_first, int& sector_second);
 };
 
 #endif // REFEREE_H

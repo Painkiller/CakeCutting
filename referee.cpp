@@ -118,6 +118,27 @@ void Referee::handle_middle()
     }
 }
 
+void Referee::handle_equitability()
+{
+    int eq_first_sector, eq_second_sector; 
+    
+    float eq_first_point, eq_second_point, middle_ev_first, middle_ev_second;
+    float middle_other_ev_first, middle_other_ev_second;
+    
+    map<Player*, map<int, float> >::iterator itr;
+    Player *player;
+    int i = 0;
+    
+    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+    {
+	player = itr->first;
+	m_pieces_assigned.insert(make_pair(player, i));
+	i++;
+    }
+    
+    find_eq_sector_multi(eq_first_sector, eq_second_sector);
+}
+
 void Referee::assign_piece(string player_id, int sector_begin, float partial_begin,  int sector_end, float partial_end)
 {
     Piece piece;
@@ -295,4 +316,38 @@ float Referee::find_eq_point(int sector)
     }
     cout << "Sector: " << sector << "; Point " << l << endl;
     return l;
+}
+
+void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
+{
+    int r, m, n, l;
+    int fix_one, fix_two;
+    float res_first, res_second, res_third;
+    
+    map<Player*, map<int, float> >::iterator itr;
+    Player *player;
+    
+    l = 0;
+    r = m_cake->get_size() - 1;
+    m = floor((l + r + 1) / 3);
+    n = floor((l + r + 1) * 2 / 3);
+    cout << "n " << n << " m " << m << " l " << l<< " r "<< r << endl;
+    
+    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+    {
+	player = itr->first;
+	switch(m_pieces_assigned.find(player)->second)
+	{
+	    case 0:
+		calculate_piece_evaluation(l, m , 0, 0, itr->second, res_first); 
+	    break;
+	    case 1:
+		calculate_piece_evaluation(m, n , 0, 0, itr->second, res_second); 
+	    break;
+	    case 2:
+		calculate_piece_evaluation(m, n , 0, 0, itr->second, res_third); 
+	    break;
+	}
+    }
+    
 }

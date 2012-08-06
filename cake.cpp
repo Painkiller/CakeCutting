@@ -15,7 +15,6 @@ void Cake::build_cake()
 {
     int value;
     int values[8] = {3,4,4,1,4,4,3,2}; 
-    srand(time(0));
     
     for(int i = 0; i < N_SECTORS; i++)
     {
