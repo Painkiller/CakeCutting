@@ -44,35 +44,35 @@ void Referee::handle_halfpoints()
 	    {	
 
 		assign_piece(new_ck.m_id, 0, 1, new_ck.m_sector, new_ck.m_part);
-		assign_piece(old_ck.m_id, old_ck.m_sector, old_ck.m_part, m_cake->get_size(), 1);
+		assign_piece(old_ck.m_id, old_ck.m_sector, old_ck.m_part, m_cake->get_size() - 1, 1);
 	    }
 	    else if(new_ck.m_sector == old_ck.m_sector)
 	    {
 		if(new_ck.m_part < old_ck.m_part)
 		{
 		    assign_piece(new_ck.m_id, 0, 1, new_ck.m_sector, new_ck.m_part);
-		    assign_piece(old_ck.m_id, old_ck.m_sector, 1 - old_ck.m_part, m_cake->get_size(), 1);
-		    assign_piece("R", new_ck.m_sector, 1 - new_ck.m_part - old_ck.m_part, old_ck.m_sector, 1 - new_ck.m_part - old_ck.m_part);
+		    assign_piece(old_ck.m_id, old_ck.m_sector, old_ck.m_part, m_cake->get_size() - 1, 1);
+		    assign_piece("R", new_ck.m_sector, new_ck.m_part, old_ck.m_sector, old_ck.m_part);
 		}
 		else
 		{
 		    assign_piece(old_ck.m_id, 0, 1, old_ck.m_sector, old_ck.m_part);
-		    assign_piece(new_ck.m_id, new_ck.m_sector, 1 - new_ck.m_part, m_cake->get_size(), 1);
-		    assign_piece("R", old_ck.m_sector, 1 - new_ck.m_part - old_ck.m_part, new_ck.m_sector, 1 - new_ck.m_part - old_ck.m_part);
+		    assign_piece(new_ck.m_id, new_ck.m_sector, new_ck.m_part, m_cake->get_size() - 1, 1);
+		    assign_piece("R", old_ck.m_sector, old_ck.m_part, new_ck.m_sector, new_ck.m_part);
 		}
 	    }
 	    else if(new_ck.m_sector < old_ck.m_sector)
 	    {
 		assign_piece(new_ck.m_id, 0, 1, new_ck.m_sector, new_ck.m_part);
-		assign_piece(old_ck.m_id, old_ck.m_sector, 1 - old_ck.m_part, m_cake->get_size(), 1);
-		assign_piece("R", new_ck.m_sector, 1 - new_ck.m_part, old_ck.m_sector, 1 - old_ck.m_part);
+		assign_piece(old_ck.m_id, old_ck.m_sector, old_ck.m_part, m_cake->get_size() - 1, 1);
+		assign_piece("R", new_ck.m_sector, new_ck.m_part, old_ck.m_sector, old_ck.m_part);
 
 	    }
 	    else
 	    {
 		assign_piece(old_ck.m_id, 0, 1, old_ck.m_sector, old_ck.m_part);
-		assign_piece(new_ck.m_id, new_ck.m_sector,  1 - new_ck.m_part, m_cake->get_size(), 1);
-		assign_piece("R", old_ck.m_sector, 1 - new_ck.m_part, new_ck.m_sector, 1 - old_ck.m_part);
+		assign_piece(new_ck.m_id, new_ck.m_sector,  new_ck.m_part, m_cake->get_size() - 1, 1);
+		assign_piece("R", old_ck.m_sector, new_ck.m_part, new_ck.m_sector, old_ck.m_part);
 	    }
 	}
     }
@@ -99,11 +99,12 @@ void Referee::handle_middle()
 	{
 	    calculate_piece_evaluation(m_middle_piece.m_begin.m_sector, eq_sector, m_middle_piece.m_begin.m_part, eq_point, itr->second, middle_ev_first); 
 	    calculate_piece_evaluation(eq_sector, m_middle_piece.m_end.m_sector, 1 - eq_point, m_middle_piece.m_end.m_part, itr->second, middle_other_ev_first);
-
+// 	    cout<<"QQQQQQQQQQQQQQQQ"<<endl;
+// 	    calculate_piece_evaluation(0, m_cake->get_size(), 1, 1, itr->second, middle_other_ev_first); 
+// 	    cout<<"QQQQQQQQQQQQQQQQ"<<endl;
 	    cout << "Player " << player->get_id() << " receives suprlus piece from sector " << m_middle_piece.m_begin.m_sector << " to " << eq_sector << " at point " << eq_point <<endl;
 	    cout << "Player " << player->get_id() << " evalution of his own surplus is " << middle_ev_first << endl;
 	    cout << "Player " << player->get_id() << " evalution of the other surplus is " << middle_other_ev_first << endl;
-
 	}
 	else
 	{
@@ -111,9 +112,8 @@ void Referee::handle_middle()
 	    calculate_piece_evaluation(m_middle_piece.m_begin.m_sector, eq_sector, m_middle_piece.m_begin.m_part, eq_point, itr->second, middle_other_ev_second); 
 
 	    cout << "Player " << player->get_id() << " receives suprlus piece from sector " << eq_sector << " to " << m_middle_piece.m_end.m_sector << " at point " << eq_point <<endl;
-	    cout << "Player " << player->get_id() << " evalution of surplus is " << middle_ev_second << endl;
+	    cout << "Player " << player->get_id() << " evalution of his own surplus is " << middle_ev_second << endl;
 	    cout << "Player " << player->get_id() << " evalution of the other surplus is " << middle_other_ev_second << endl;
-
 	}
     }
 }
@@ -172,19 +172,23 @@ void Referee::calculate_piece_evaluation(int sect_begin, int sect_end, float par
     
     type = m_cake->get_type_at(sect_begin);
     result = evaluation_map.find(type)->second * part_begin;
-//     cout << "sect_begin: " << sect_begin << " part_begin: " << part_begin << " sect_end: " << sect_end << " part_begin: " << part_begin << endl;
+//     cout<<result<<endl;
+//      cout << "sect_begin: " << sect_begin << " part_begin: " << part_begin << " sect_end: " << sect_end << " part_begin: " << part_end << endl;
     if(sect_begin != sect_end)
     {
 	if(sect_begin + 1 != sect_end)
 	{
-	    for(int i = sect_begin + 1; i < sect_end - 1; i++)
+	    for(int i = (sect_begin + 1); i < (N_SECTORS - 1); i++)
 	    {
 		type = m_cake->get_type_at(i);
 		result += evaluation_map.find(type)->second;
+// 		cout<<evaluation_map.find(type)->second<<endl;
 	    }
 	}
 	type = m_cake->get_type_at(sect_end);
 	result += evaluation_map.find(type)->second * part_end;
+// 			cout<<evaluation_map.find(type)->second<<" sec end " << sect_end << " type " << type << endl;
+
     }
 }
 int Referee::find_eq_sector()
@@ -198,34 +202,39 @@ int Referee::find_eq_sector()
     l = m_middle_piece.m_begin.m_sector;
     r = m_middle_piece.m_end.m_sector;
     
-    while( !(l == r) )
+    while( !(l == r) /*&& !((r - 1) == l)*/)
     {
 	mid = ((l + r + 1) / 2);
 	for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
 	{
 	    player = itr->first;
-	    
+// 	    cout << "mid " << mid<< " l " << l<< " r "<< r << endl;
 	    if(m_pieces_assigned.find(player)->second == 0)
 	    {
 		calculate_piece_evaluation(m_middle_piece.m_begin.m_sector, mid - 1, m_middle_piece.m_begin.m_part, 1, itr->second, res_first); 
-				cout << "pla " << player->get_id()<< endl;
+// 				cout << "res first " << res_first<< endl;
 
 	    }
 	    else
 	    {
 		calculate_piece_evaluation(mid, m_middle_piece.m_end.m_sector, 1, m_middle_piece.m_end.m_part, itr->second, res_second); 
-		cout << "aaA" << endl;
+// 		cout << "res_second " << res_second << endl;
 	    }
 	}
+	
 	if(res_first < res_second)
 	  l = mid;
 	else
 	  r = mid;
 	
 	if( (r - 1) == l)
-	  return mid;
-    }
-    
+	{
+	    if(res_first > res_second)
+		l = r;
+	    else
+		r = l;
+	}
+    }    
     return l;
 }
 
@@ -237,10 +246,15 @@ float Referee::find_eq_point(int sector)
     map<Player*, map<int, float> >::iterator itr;
     Player *player;
     
-    if(m_middle_piece.m_begin.m_sector == m_middle_piece.m_begin.m_sector)
+    if(m_middle_piece.m_begin.m_sector != m_middle_piece.m_end.m_sector)
     {
 	l = 0;
 	r = 1;
+    }
+    else if (m_middle_piece.m_begin.m_sector == m_middle_piece.m_end.m_sector)
+    {
+	l = m_middle_piece.m_begin.m_part;
+	r = m_middle_piece.m_end.m_part;
     }
     else if(m_middle_piece.m_begin.m_sector == sector)
     {
@@ -249,15 +263,12 @@ float Referee::find_eq_point(int sector)
     }
     else if(m_middle_piece.m_end.m_sector == sector)
     {
-      	l = 1;
+      	l = 0;
 	r = m_middle_piece.m_end.m_part;
     }
-    else
-    {
-	l = m_middle_piece.m_begin.m_part;
-	r = m_middle_piece.m_end.m_part;
-    }
-    
+
+    	cout << "l: " << l << "; r " << r << endl;
+
     while((r - l) > 0.0000001  )
     {
 	mid = (l + r) / 2;
@@ -265,12 +276,12 @@ float Referee::find_eq_point(int sector)
 	{
 	    player = itr->first;
 	    if(m_pieces_assigned.find(player)->second == 0)
-		calculate_piece_evaluation(sector, sector, mid, 0, itr->second, res_first); 
+		calculate_piece_evaluation(m_middle_piece.m_begin.m_sector, sector, m_middle_piece.m_begin.m_part, mid, itr->second, res_first); 
 	    else
-		calculate_piece_evaluation(sector, sector, (1 - mid), 0, itr->second, res_second); 
+		calculate_piece_evaluation(sector, m_middle_piece.m_end.m_sector, (1 - mid),  m_middle_piece.m_end.m_part, itr->second, res_second); 
 	}
-// 	cout << "fi: " << res_first << "; se " << res_second << endl;
-// 	cout << "l: " << l << "; r " << r << endl;
+	cout << "fi: " << res_first << "; se " << res_second << endl;
+	cout << "mid " << mid<< " l " << l<< " r "<< r << endl;
 	if(res_first < res_second)
 	  l = mid;
 	else
