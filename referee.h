@@ -16,7 +16,7 @@ public:
     void handle_halfpoints();
     void assign_player(Player *player);
     void calculate_total_evaluation();
-    void calculate_piece_evaluation(int sect_begin, int sect_end, float part_begin, float part_end, map<int, float> evaluation_map, float &result);
+    void calculate_piece_evaluation(int sect_begin, int sect_end, float point_begin, float point_end, map<int, float> evaluation_map, float &result);
     void handle_middle();
     
 private:

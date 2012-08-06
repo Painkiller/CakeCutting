@@ -12,7 +12,7 @@ struct CakeCut
 {
     string m_id;
     int m_sector;
-    float m_part;
+    float m_point;
 };
 
 struct Piece
@@ -31,16 +31,16 @@ public:
     void build_cake();
     int get_type_at(int pos);
     
-    inline void set_cake_cut(int cut, float partial, string player_id)
+    inline void set_cake_cut(int sector, float point, string player_id)
     {
 	CakeCut ck;
 	
-	ck.m_sector = cut;
-	ck.m_part = partial;
+	ck.m_sector = sector;
+	ck.m_point = point;
 	ck.m_id = player_id;
 	
 	m_cake_cut.push_back(ck);
-	cout << "Player " << player_id << " cuts the cake at sector " << cut << " with percentage " << partial << endl;
+	cout << "Player " << player_id << " cuts the cake at sector " << sector << " at point " << point << endl;
     }
 
     inline CakeCut get_cake_cut(int pos){return m_cake_cut[pos];}

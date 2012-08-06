@@ -47,8 +47,8 @@ void Player::calculate_piece_evaluation()
     int sect_begin = m_piece_assigned.m_begin.m_sector;
     int sect_end = m_piece_assigned.m_end.m_sector;
     
-    float part_begin = m_piece_assigned.m_begin.m_part;
-    float part_end = m_piece_assigned.m_end.m_part;
+    float part_begin = m_piece_assigned.m_begin.m_point;
+    float part_end = m_piece_assigned.m_end.m_point;
     
     type = m_cake->get_type_at(sect_begin);
     m_piece_result = m_evaluation_map.find(type)->second * part_begin;
@@ -76,8 +76,8 @@ void Player::print_piece_info()
 	
     cout << "Player "<< m_id << " piece of cake is:" << endl;
     
-    cout << "From sector " << m_piece_assigned.m_begin.m_sector << " perc " << m_piece_assigned.m_begin.m_part << endl;
-    cout << "From sector " << m_piece_assigned.m_end.m_sector << " perc " << m_piece_assigned.m_end.m_part << endl;
+    cout << "From sector " << m_piece_assigned.m_begin.m_sector << " point " << m_piece_assigned.m_begin.m_point << endl;
+    cout << "To sector " << m_piece_assigned.m_end.m_sector << " point " << m_piece_assigned.m_end.m_point << endl;
     
     cout << endl;
 }
@@ -103,7 +103,7 @@ void Player::choose()
 	first_ev += m_evaluation_map.find(type)->second;
     }
     
-    first_ev += m_evaluation_map.find(ck.m_sector)->second * ck.m_part;
+    first_ev += m_evaluation_map.find(ck.m_sector)->second * ck.m_point;
     cout << "Player B evaluates the first piece of cake as: "<< first_ev <<  endl;
     for(int i = ck.m_sector + 1 ; i < N_SECTORS; i++)
     {
@@ -111,7 +111,7 @@ void Player::choose()
 	second_ev += m_evaluation_map.find(type)->second;
     }
     
-    second_ev += m_evaluation_map.find(ck.m_sector)->second * (1 - ck.m_part);
+    second_ev += m_evaluation_map.find(ck.m_sector)->second * (1 - ck.m_point);
     cout << "Player B evaluates the second piece of cake as: "<< second_ev <<  endl;
     if(first_ev > second_ev)
       m_chosen = 1;
@@ -127,7 +127,7 @@ void Player::calculate_cut()
     float diff, part;
     float ev = 0;
     
-    while(m_halfpoint >= ev)
+    while(m_halfpoint >= ev && i <= (N_SECTORS -1) )
     {
 	type = m_cake->get_type_at(i);
 	ev += m_evaluation_map.find(type)->second;
