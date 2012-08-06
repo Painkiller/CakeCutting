@@ -20,8 +20,8 @@ void Cake::build_cake()
     for(int i = 0; i < N_SECTORS; i++)
     {
 	value = rand() % N_SECTOR_TYPE;
-// 	m_sectors.push_back(value);
-	m_sectors.push_back(values[i]);
+	m_sectors.push_back(value);
+// 	m_sectors.push_back(values[i]);
     }
 }
 

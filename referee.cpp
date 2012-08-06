@@ -179,9 +179,9 @@ void Referee::calculate_piece_evaluation(int sect_begin, int sect_end, float poi
 //      cout << "sect_begin: " << sect_begin << " part_begin: " << part_begin << " sect_end: " << sect_end << " part_begin: " << part_end << endl;
     if(sect_begin != sect_end)
     {
-	if(sect_begin + 1 != sect_end)
+	if( (sect_begin + 1) != sect_end)
 	{
-	    for(int i = (sect_begin + 1); i < (N_SECTORS - 1); i++)
+	    for(int i = (sect_begin + 1); i < (sect_end - 1); i++)
 	    {
 		type = m_cake->get_type_at(i);
 		result += evaluation_map.find(type)->second;

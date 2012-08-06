@@ -121,7 +121,7 @@ void Player::choose()
 
 void Player::calculate_cut()
 {
-    int type;
+    int type, sector;
     int i = 0;
     
     float diff, part;
@@ -135,6 +135,7 @@ void Player::calculate_cut()
     }
     diff = ev - m_halfpoint;
     part = diff / m_evaluation_map.find(type)->second;
+    sector = i - 1;
     
-    m_cake->set_cake_cut(i, part, m_id);
+    m_cake->set_cake_cut(sector, part, m_id);
 }
