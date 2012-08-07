@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     cout <<"*************EQUITABILITY PROCEDURE************" << endl;
     cout << endl;
     
-    Player *player_c = new Player("B", cake);
+    Player *player_c = new Player("C", cake);
     player_c->build_evaluation_map();
     
     equitability_procedure(player_a, player_b, player_c, referee);

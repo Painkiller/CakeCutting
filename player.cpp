@@ -13,15 +13,27 @@ Player::~Player()
 
 void Player::build_evaluation_map()
 {
-    float evaluation;
+    int evaluation;
 //     srand(time(0));
-
+    int ev_a[5] = {6,1,9,7,7};
+    int ev_b[5] = {6,4,3,0,1};
+    int ev_c[5] = {3,5,9,7,1};
+    
+    int *ev_s;
+    if(m_id == "A")
+	ev_s = ev_a;
+    else if(m_id == "B")
+	ev_s = ev_b;
+    else	
+	ev_s = ev_c;
+    
     cout<< "Player evaluation map:"<<endl;
     for(int i = 0; i < N_SECTOR_TYPE; i++)
     {
 	evaluation = (float)rand()/((float)RAND_MAX/10);
 	m_evaluation_map.insert(make_pair(i, evaluation));
-	cout<< i << " -> " << evaluation<<endl;
+// 	cout<< i << " -> " << evaluation<<endl;
+	cout<< i << " -> " << ev_s[i]<<endl;
     }
      cout<<endl;
 }
