@@ -137,6 +137,7 @@ void Referee::handle_equitability()
     }
     
     find_eq_sector_multi(eq_first_sector, eq_second_sector);
+    find_eq_point_multi(eq_first_sector, eq_second_sector, eq_first_point, eq_second_point);
 }
 
 void Referee::assign_piece(string player_id, int sector_begin, float partial_begin,  int sector_end, float partial_end)
@@ -352,11 +353,11 @@ void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
 		{
 		    case 0:
 			calculate_piece_evaluation(0, m - 1, 0, 1, itr->second, res_first); 
-				cout << "res first " << res_first<< endl;
+// 				cout << "res first " << res_first<< endl;
 		    break;
 		    case 1:
 			calculate_piece_evaluation(m, fix_two - 1 , 0, 1, itr->second, res_second); 
-				cout << "res second " << res_second<< endl;
+// 				cout << "res second " << res_second<< endl;
 		    break;
 		    case 2:
     // 		    calculate_piece_evaluation(n, m_cake->get_size() - 1 , 0, 1, itr->second, res_third); 
@@ -368,18 +369,24 @@ void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
 	    if(res_first < res_second)
 	    {
 		if( (n - 1) == l)
+		{
 		    l = n;
+		    fix_one = l;
+		}
 		else
 		    l = m;
 	    }
 	    else
 	    {
 	      if( (n - 1) == l)
+	      {
 		  n = l;
+		  fix_one = l;
+	      }
 	      else
 		  n = m;
 	    }
-	    fix_one = m;
+// 	    fix_one = m;
 	    m = (l + n + 1) / 2;
 	}
 	
@@ -400,11 +407,11 @@ void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
 		    break;
 		    case 1:
 			calculate_piece_evaluation(fix_one, n - 1 , 0, 1, itr->second, res_second); 
-			    cout << "res second " << res_second<< endl;
+// 			    cout << "res second " << res_second<< endl;
 		    break;
 		    case 2:
 			calculate_piece_evaluation(n, m_cake->get_size() - 1 , 0, 1, itr->second, res_third); 
-    			    cout << "res third " << res_third<< endl;
+//     			    cout << "res third " << res_third<< endl;
 		    break;
 		}
 	    }
@@ -412,26 +419,33 @@ void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
 	    if(res_second < res_third)
 	    {
 		if( (r - 1) == m)
+		{
 		    m = r;
+		    fix_two = m;
+		}
 		else
 		    m = n;
 	    }
 	    else
 	    {
 	      if( (r - 1) == m)
+	      {
 		  r = m;
+		  fix_two = m;
+	      }
 	      else
 		  r = n;
 	    }
-	    fix_two = n;
-	    n = (m + r + 1) / 2;
+	    n = floor((m + r + 1) / 2);
 	}
 	if(fix_three == fix_two)
 	    found = true;	
 	else
 	{
+	    l = 0;
+	    r = m_cake->get_size() - 1;
 	    n = floor((fix_three + fix_two + 1) / 2);
-	    m = floor(n / 2);
+	    m = floor(n + 1 / 2);
 	    fix_one = m;
 	    fix_two = n;
 	}
@@ -457,9 +471,176 @@ void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
 // 	    n = floor((n + r + 1) / 2);
 // 	}
 	    cout << "l " << l  << " m " << m << " n " << n<< " r "<< r << endl;
-	    found = true;
+// 	    found = true;
     }
-    cout << "res first " << res_first<< endl;
-    cout << "res second " << res_second<< endl;
-    cout << "res third " << res_third<< endl;
+    	    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+	    {
+		player = itr->first;
+		switch(m_pieces_assigned.find(player)->second)
+		{
+		    case 0:
+			calculate_piece_evaluation(0, fix_one - 1, 0, 1, itr->second, res_first); 
+				cout << "res first " << res_first<< endl;
+		    break;
+		    case 1:
+			calculate_piece_evaluation(fix_one, fix_two - 1 , 0, 1, itr->second, res_second); 
+			    cout << "res second " << res_second<< endl;
+		    break;
+		    case 2:
+			calculate_piece_evaluation(fix_two, m_cake->get_size() - 1 , 0, 1, itr->second, res_third); 
+    			    cout << "res third " << res_third<< endl;
+		    break;
+		}
+	    }
+	cout << "un " << fix_one  << " du " << fix_two  << endl;    
+	sector_first = fix_one;
+	sector_second = fix_two;
+//     cout << "res first " << res_first<< endl;
+//     cout << "res second " << res_second<< endl;
+//     cout << "res third " << res_third<< endl;
+}
+
+void Referee::find_eq_point_multi(int sector_first, int sector_second, float& eq_first_point, float& eq_second_point)
+{
+    float l, r, m, n;
+    float fix_one, fix_two, fix_three;
+    float res_first, res_second, res_third;
+    bool found = false;
+    
+    map<Player*, map<int, float> >::iterator itr;
+    Player *player;
+    
+    l = 0;
+    r = 1;
+//     m = floor((l + r + 1) / 3);
+    m = (l + r) / 2;
+    n = m;
+    
+    fix_one = m;
+    fix_two = n;
+    
+    while(!found)
+    {
+	while( (r - l) > 0.0000001)
+	{
+	    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+	    {
+		player = itr->first;
+		switch(m_pieces_assigned.find(player)->second)
+		{
+		    case 0:
+			calculate_piece_evaluation(0, sector_first, 0, m, itr->second, res_first); 
+// 				cout << "res first " << res_first<< endl;
+		    break;
+		    case 1:
+			calculate_piece_evaluation(sector_first + 1, sector_second , m, fix_two, itr->second, res_second); 
+// 				cout << "res second " << res_second<< endl;
+		    break;
+		    case 2:
+    // 		    calculate_piece_evaluation(n, m_cake->get_size() - 1 , 0, 1, itr->second, res_third); 
+    // 			    cout << "res third " << res_third<< endl;
+		    break;
+		}
+	    }
+	    
+	    if(res_first < res_second)
+		l = m;
+	    else
+		r = m;
+	    
+	    fix_one = m;
+	    m = (l + r) / 2;
+	}
+	
+	fix_three = fix_two;
+	l = 0;
+	r = 1;
+	
+	while( (r - l) > 0.0000001)
+	{
+	    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+	    {
+		player = itr->first;
+		switch(m_pieces_assigned.find(player)->second)
+		{
+		    case 0:
+// 			calculate_piece_evaluation(0, m - 1, 0, 1, itr->second, res_first); 
+// 				cout << "res first " << res_first<< endl;
+		    break;
+		    case 1:
+			calculate_piece_evaluation(sector_first + 1, sector_second , fix_one,  n, itr->second, res_second); 
+// 			    cout << "res second " << res_second<< endl;
+		    break;
+		    case 2:
+			calculate_piece_evaluation(sector_second + 1 , m_cake->get_size() - 1 , n, 1, itr->second, res_third); 
+//     			    cout << "res third " << res_third<< endl;
+		    break;
+		}
+	    }
+	    if(res_second < res_third)
+		l = n;
+	    else
+		r = n;
+	    
+	    fix_two = n;
+	    n = (l + r) / 2;
+	}
+	
+	if( ( ((fix_three - fix_two) <= 0.0000001) && (fix_three >= fix_two) ) || ( ((fix_two - fix_three) <= 0.0000001) && (fix_three <= fix_two) ))
+	    found = true;	
+	else
+	{
+	    l = 0;
+	    r = 1;
+	    n = (fix_three + fix_two) / 2;
+	    m = (l + r) / 2;
+	    fix_one = m;
+	    fix_two = n;
+	}
+	
+// 	if(res_first < res_second)
+// 	{
+// 	    l = m;
+// 	    if(res_third < res_second)
+// 		r = n;
+// 	    
+// 	    m = floor((l + r + 1) / 3);
+// 	    n = floor((l + r + 1) * 2 / 3); 
+// 	}
+// 	else if(res_third < res_second)
+// 	{
+// 	    r = n;
+// 	    m = floor((l + r + 1) / 3);
+// 	    n = floor((l + r + 1) * 2 / 3);
+// 	}
+// 	else
+// 	{
+// 	    m = floor((l + m + 1) / 2);
+// 	    n = floor((n + r + 1) / 2);
+// 	}
+
+// 	    found = true;
+    }
+    	    cout << "******"<<  endl;
+	    cout << "f1 " << fix_one << " f2 " << fix_two << endl;
+	    cout << "******"<<  endl;
+    	    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+	    {
+		player = itr->first;
+		switch(m_pieces_assigned.find(player)->second)
+		{
+		    case 0:
+			calculate_piece_evaluation(0, sector_first, 0, fix_one, itr->second, res_first); 
+				cout << "res first " << res_first<< endl;
+		    break;
+		    case 1:
+			calculate_piece_evaluation(sector_first + 1, sector_second , fix_one,  fix_two, itr->second, res_second); 
+			    cout << "res second " << res_second<< endl;
+		    break;
+		    case 2:
+			calculate_piece_evaluation(sector_second + 1 , m_cake->get_size() - 1 , fix_two, 1, itr->second, res_third); 
+    			    cout << "res third " << res_third<< endl;
+		    break;
+		}
+	    }
 }
