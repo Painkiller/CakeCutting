@@ -15,9 +15,22 @@ void Player::build_evaluation_map()
 {
     int evaluation;
 //     srand(time(0));
-    int ev_a[5] = {6,1,9,7,7};
-    int ev_b[5] = {6,4,3,0,1};
-    int ev_c[5] = {3,5,9,7,1};
+//     int ev_a[5] = {6,1,9,7,7};
+//     int ev_b[5] = {6,4,3,0,1};
+//     int ev_c[5] = {3,5,9,7,1};
+    
+//     int ev_a[5] = {3,1,5,9,4};
+//     int ev_b[5] = {4,7,3,9,0};
+//     int ev_c[5] = {1,4,6,5,4};
+    
+        
+//     int ev_a[5] = {1,5,8,3,4};
+//     int ev_b[5] = {1,1,8,3,0};
+//     int ev_c[5] = {1,6,8,0,9};
+    
+    int ev_a[5] = {2,7,4,8,3};
+    int ev_b[5] = {9,3,9,8,8};
+    int ev_c[5] = {4,5,4,5,4};
     
     int *ev_s;
     if(m_id == "A")
@@ -32,8 +45,8 @@ void Player::build_evaluation_map()
     {
 	evaluation = (float)rand()/((float)RAND_MAX/10);
 	m_evaluation_map.insert(make_pair(i, evaluation));
-// 	cout<< i << " -> " << evaluation<<endl;
-	cout<< i << " -> " << ev_s[i]<<endl;
+	cout<< i << " -> " << evaluation<<endl;
+// 	cout<< i << " -> " << ev_s[i]<<endl;
     }
      cout<<endl;
 }

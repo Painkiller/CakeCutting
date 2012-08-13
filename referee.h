@@ -33,6 +33,7 @@ private:
     float find_eq_point(int arg1);
     void find_eq_sector_multi(int& sector_first, int& sector_second);
     void find_eq_point_multi(int sector_first, int sector_second, float& eq_first_point, float& eq_second_point);
+    bool validate_results(float res_first, float res_second, float res_third);
 };
 
 #endif // REFEREE_H
