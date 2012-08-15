@@ -11,7 +11,7 @@ Player::~Player()
 
 }
 
-void Player::build_evaluation_map()
+void Player::buildEvaluationMap()
 {
     int evaluation;
 //     srand(time(0));
@@ -51,7 +51,7 @@ void Player::build_evaluation_map()
      cout<<endl;
 }
 
-void Player::calculate_total_evaluation()
+void Player::calculateTotalEvaluation()
 {
     int type;
     
@@ -65,7 +65,7 @@ void Player::calculate_total_evaluation()
     m_halfpoint = m_result / 2;
 }
 
-void Player::calculate_piece_evaluation()
+void Player::calculatePieceEvaluation()
 {
     int type;
     
@@ -89,13 +89,13 @@ void Player::calculate_piece_evaluation()
 }
 
 
-void Player::print_total_evaluation()
+void Player::printTotalEvaluation()
 {
     cout << "Player "<< m_id << " evaluates the whole cake as:" << endl;
     cout << m_result << endl;
 }
 
-void Player::print_piece_info()
+void Player::printPieceInfo()
 {
     cout << endl;
 	
@@ -109,7 +109,7 @@ void Player::print_piece_info()
 
 void Player::cut()
 {
-    calculate_cut();
+    calculateCut();
 }
 
 void Player::choose()
@@ -144,7 +144,7 @@ void Player::choose()
       m_chosen = 2;
 }
 
-void Player::calculate_cut()
+void Player::calculateCut()
 {
     int type, sector;
     int i = 0;

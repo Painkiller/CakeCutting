@@ -11,7 +11,7 @@ Cake::~Cake()
 
 }
 
-void Cake::build_cake()
+void Cake::buildCake()
 {
     int value;
     int values[8] = {3,4,4,1,4,4,3,2}; 
@@ -24,12 +24,7 @@ void Cake::build_cake()
     }
 }
 
-int Cake::get_type_at(int pos)
-{
-    return m_sectors[pos];
-}
-
-void Cake::print_sectors()
+void Cake::printSectors()
 {
     cout << "Sectors in the cake:" << endl;
     for(int i = 0; i < N_SECTORS; i++)

@@ -4,10 +4,10 @@
 #include "referee.h"
 #include "cake.h"
 
-void cut_and_choose(Player *player_a, Player *player_b);
+void cutAndChoose(Player *player_a, Player *player_b);
 
-void surplus_procedure(Player *player_a, Player *player_b, Referee *referee);
-void equitability_procedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee);
+void surplusProcedure(Player *player_a, Player *player_b, Referee *referee);
+void equitabilityProcedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee);
 
 
 int main(int argc, char **argv) 
@@ -22,19 +22,19 @@ int main(int argc, char **argv)
     Referee *referee = new Referee(cake);
     
     //building cake
-    cake->build_cake();
+    cake->buildCake();
     
-    cake->print_sectors();
+    cake->printSectors();
     
     //building players' evaluations
     
-    player_a->build_evaluation_map();
-    player_b->build_evaluation_map();
+    player_a->buildEvaluationMap();
+    player_b->buildEvaluationMap();
     
     
     //***Cut & Choose Method***
     
-    cut_and_choose(player_a, player_b);
+    cutAndChoose(player_a, player_b);
     
     //Clear previous cuts
     cake->clear_cuts();
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     cout <<"*************SURPLUS PROCEDURE************" << endl;
     cout << endl;
     //***Surplus Procedure**
-    surplus_procedure(player_a, player_b, referee);
+    surplusProcedure(player_a, player_b, referee);
     
     cake->clear_cuts();
     referee->clear_pieces();
@@ -52,19 +52,19 @@ int main(int argc, char **argv)
     cout << endl;
     
     Player *player_c = new Player("C", cake);
-    player_c->build_evaluation_map();
+    player_c->buildEvaluationMap();
     
-    equitability_procedure(player_a, player_b, player_c, referee);
+    equitabilityProcedure(player_a, player_b, player_c, referee);
     
     return 0;
 }
 
-void cut_and_choose(Player *player_a, Player *player_b)
+void cutAndChoose(Player *player_a, Player *player_b)
 { 
     //evaluation
-    player_a->calculate_total_evaluation();
+    player_a->calculateTotalEvaluation();
     
-    player_a->print_total_evaluation();
+    player_a->printTotalEvaluation();
     
     //cut
     player_a->cut();
@@ -73,27 +73,27 @@ void cut_and_choose(Player *player_a, Player *player_b)
     player_b->choose();
 }
 
-void surplus_procedure(Player *player_a, Player *player_b, Referee *referee)
+void surplusProcedure(Player *player_a, Player *player_b, Referee *referee)
 {
-    player_a->calculate_total_evaluation();
-    player_b->calculate_total_evaluation();
+    player_a->calculateTotalEvaluation();
+    player_b->calculateTotalEvaluation();
     
     player_a->cut();
     player_b->cut();
     
-    referee->assign_player(player_a);
-    referee->assign_player(player_b);
+    referee->assignPlayer(player_a);
+    referee->assignPlayer(player_b);
     
-    referee->handle_halfpoints();
+    referee->handleHalfpoints();
     
-    player_a->print_piece_info();
-    player_b->print_piece_info();
+    player_a->printPieceInfo();
+    player_b->printPieceInfo();
     
-    referee->handle_middle();
+    referee->handleMiddle();
 }
 
-void equitability_procedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee)
+void equitabilityProcedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee)
 {
-    referee->assign_player(player_c);
-    referee->handle_equitability();
+    referee->assignPlayer(player_c);
+    referee->handleEquitability();
 }

@@ -9,7 +9,7 @@ public:
     Entity();
     virtual ~Entity();
 //     void build_evaluation_map();
-    virtual void calculate_total_evaluation(){}
+    virtual void calculateTotalEvaluation(){}
 //     void print_total_evaluation();
     virtual void cut(Cake* cake){}
 //     void choose(Cake* cake);

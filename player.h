@@ -16,11 +16,11 @@ class Player : public Entity
 public:
     Player(string id, Cake* cake);
     virtual ~Player();
-    void build_evaluation_map();
-    void calculate_total_evaluation();
-    void calculate_piece_evaluation();
-    void print_total_evaluation();
-    void print_piece_info();
+    void buildEvaluationMap();
+    void calculateTotalEvaluation();
+    void calculatePieceEvaluation();
+    void printTotalEvaluation();
+    void printPieceInfo();
     void cut();
     void choose();
     
@@ -29,9 +29,6 @@ public:
     inline map<int, float> get_evaluation_map(){return m_evaluation_map;}
     
 private:
-    void calculate_cut();
-  
-  
     float m_result;
     float m_piece_result;
     float m_halfpoint;
@@ -43,6 +40,9 @@ private:
     map<int, float> m_evaluation_map;
     
     Piece m_piece_assigned;
+    
+    
+    void calculateCut();
 };
 
 #endif // PLAYER_H
