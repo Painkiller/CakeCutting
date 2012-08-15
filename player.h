@@ -26,7 +26,7 @@ public:
     
     inline void set_piece(Piece *piece){m_piece_assigned = piece;}
     inline string& get_id(){return m_id;}
-    inline map<int, float> get_evaluation_map(){return m_evaluation_map;}
+    inline map<int, float> get_evaluation_map(){return m_norm_evaluation_map;}
     
 private:
     float m_result;
@@ -38,7 +38,8 @@ private:
     string m_id;
     
     map<int, float> m_evaluation_map;
-    
+    map<int, float> m_norm_evaluation_map;
+
     Piece *m_piece_assigned;
     
     

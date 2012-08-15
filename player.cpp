@@ -14,40 +14,29 @@ Player::~Player()
 
 void Player::buildEvaluationMap()
 {
-    int evaluation;
-//     srand(time(0));
-//     int ev_a[5] = {6,1,9,7,7};
-//     int ev_b[5] = {6,4,3,0,1};
-//     int ev_c[5] = {3,5,9,7,1};
+    int type;
+    float evaluation, norm_evaluation, overall = 0;
     
-//     int ev_a[5] = {3,1,5,9,4};
-//     int ev_b[5] = {4,7,3,9,0};
-//     int ev_c[5] = {1,4,6,5,4};
-    
-        
-//     int ev_a[5] = {1,5,8,3,4};
-//     int ev_b[5] = {1,1,8,3,0};
-//     int ev_c[5] = {1,6,8,0,9};
-    
-    int ev_a[5] = {2,7,4,8,3};
-    int ev_b[5] = {9,3,9,8,8};
-    int ev_c[5] = {4,5,4,5,4};
-    
-    int *ev_s;
-    if(m_id == "A")
-	ev_s = ev_a;
-    else if(m_id == "B")
-	ev_s = ev_b;
-    else	
-	ev_s = ev_c;
-    
-    cout<< "Player evaluation map:"<<endl;
+    cout<< "Player "<< get_id() <<" evaluation map:"<<endl;
+
     for(int i = 0; i < N_SECTOR_TYPE; i++)
     {
 	evaluation = (float)rand()/((float)RAND_MAX/10);
 	m_evaluation_map.insert(make_pair(i, evaluation));
-	cout<< i << " -> " << evaluation<<endl;
-// 	cout<< i << " -> " << ev_s[i]<<endl;
+    }
+    
+    for(int i = 0; i < N_SECTORS; i++)
+    {
+	type = m_cake->get_type_at(i);
+	overall += m_evaluation_map.find(type)->second;
+    }
+    
+    for(int i = 0; i < N_SECTOR_TYPE; i++)
+    {
+	norm_evaluation = m_evaluation_map[i] / overall;
+	
+	m_norm_evaluation_map.insert(make_pair(i, norm_evaluation));
+	cout<< i << " -> " << norm_evaluation<<endl;
     }
      cout<<endl;
 }
@@ -61,7 +50,7 @@ void Player::calculateTotalEvaluation()
     for(int i = 0; i < N_SECTORS; i++)
     {
 	type = m_cake->get_type_at(i);
-	m_result += m_evaluation_map.find(type)->second;
+	m_result += m_norm_evaluation_map.find(type)->second;
     }
     m_halfpoint = m_result / 2;
 }
@@ -126,15 +115,15 @@ void Player::choose()
     for(int i = 0; i < ck->get_cut_sector(); i++)
     {
 	type = m_cake->get_type_at(i);
-	first_ev += m_evaluation_map.find(type)->second;
+	first_ev += m_norm_evaluation_map.find(type)->second;
     }
     
-    first_ev += m_evaluation_map.find(ck->get_cut_sector())->second * ck->get_cut_point();
+    first_ev += m_norm_evaluation_map.find(ck->get_cut_sector())->second * ck->get_cut_point();
     cout << "Player B evaluates the first piece of cake as: "<< first_ev <<  endl;
     for(int i = ck->get_cut_sector() + 1 ; i < N_SECTORS; i++)
     {
 	type = m_cake->get_type_at(i);
-	second_ev += m_evaluation_map.find(type)->second;
+	second_ev += m_norm_evaluation_map.find(type)->second;
     }
     
     second_ev += m_evaluation_map.find(ck->get_cut_sector())->second * (1 - ck->get_cut_point());
@@ -156,11 +145,11 @@ void Player::calculateCut()
     while(m_halfpoint >= ev && i <= (N_SECTORS -1) )
     {
 	type = m_cake->get_type_at(i);
-	ev += m_evaluation_map.find(type)->second;
+	ev += m_norm_evaluation_map.find(type)->second;
 	i++;
     }
     diff = ev - m_halfpoint;
-    part = diff / m_evaluation_map.find(type)->second;
+    part = diff / m_norm_evaluation_map.find(type)->second;
     sector = i - 1;
     
     m_cake->set_cake_cut((Entity*)this, sector, part);
