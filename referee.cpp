@@ -104,8 +104,8 @@ void Referee::handleMiddle()
 // 	    calculate_piece_evaluation(0, m_cake->get_size(), 1, 1, itr->second, middle_other_ev_first); 
 // 	    cout<<"QQQQQQQQQQQQQQQQ"<<endl;
 	    cout << "Player " << player->get_id() << " receives suprlus piece from sector " << m_middle_piece->get_left_cut_sector() << " to " << eq_sector << " at point " << eq_point <<endl;
-	    cout << "Player " << player->get_id() << " evalution of his own surplus is " << middle_ev_first << endl;
-	    cout << "Player " << player->get_id() << " evalution of the other surplus is " << middle_other_ev_first << endl;
+	    cout << "Player " << player->get_id() << " evaluation of his own surplus is " << middle_ev_first << endl;
+	    cout << "Player " << player->get_id() << " evaluation of the other surplus is " << middle_other_ev_first << endl;
 	}
 	else
 	{
@@ -113,8 +113,8 @@ void Referee::handleMiddle()
 	    calculatePieceEvaluation(m_middle_piece->get_left_cut_sector(), eq_sector, m_middle_piece->get_left_cut_point(), eq_point, itr->second, middle_other_ev_second); 
 
 	    cout << "Player " << player->get_id() << " receives suprlus piece from sector " << eq_sector << " to " << m_middle_piece->get_right_cut_sector() << " at point " << eq_point <<endl;
-	    cout << "Player " << player->get_id() << " evalution of his own surplus is " << middle_ev_second << endl;
-	    cout << "Player " << player->get_id() << " evalution of the other surplus is " << middle_other_ev_second << endl;
+	    cout << "Player " << player->get_id() << " evaluation of his own surplus is " << middle_ev_second << endl;
+	    cout << "Player " << player->get_id() << " evaluation of the other surplus is " << middle_other_ev_second << endl;
 	}
     }
 }
@@ -147,11 +147,11 @@ void Referee::handleEquitability()
 	}
 	
 	findEqSectorMulti(eq_first_sector, eq_second_sector);
-	common_value = findEqPointMulti(eq_first_sector, eq_second_sector, eq_first_point, eq_second_point);
-	
-	
+	findEqPointMulti(eq_first_sector, eq_second_sector);
+		
 	clear_pieces();
     }
+    chooseBestCommonValue();
 }
 
 void Referee::assignPiece(Entity *owner, int sector_begin, float partial_begin,  int sector_end, float partial_end)
@@ -373,20 +373,20 @@ void Referee::findEqSectorMulti(int& sector_first, int& sector_second)
 		    calculatePieceEvaluation(0, m - 1, 0, 1, itr->second, res_first[0]); 
 		    calculatePieceEvaluation(m, m, 0, 1, itr->second, tmp_res_one); 
 		    res_first[1] = res_first[0] + tmp_res_one;
-			    cout << "res first " << res_first[0]<< endl;
+// 			    cout << "res first " << res_first[0]<< endl;
 		break;
 		case 1:
 		    calculatePieceEvaluation(m + 1, n - 1 , 0, 1, itr->second, res_second[0]); 
 		    calculatePieceEvaluation(m, m, 0, 1, itr->second, tmp_res_one); 
 		    calculatePieceEvaluation(n, n, 0, 1, itr->second, tmp_res_two); 
 		    res_second[1] = res_second[0] + tmp_res_one + tmp_res_two;
-			    cout << "res second " << res_second[0]<< endl;
+// 			    cout << "res second " << res_second[0]<< endl;
 		break;
 		case 2:
 		    calculatePieceEvaluation(n + 1, m_cake->get_size() - 1 , 0, 1, itr->second, res_third[0]); 
 		    calculatePieceEvaluation(n, n, 0, 1, itr->second, tmp_res_one); 
 		    res_third[1] = res_third[0] + tmp_res_one;
-			    cout << "res third " << res_third[0]<< endl;
+// 			    cout << "res third " << res_third[0]<< endl;
 		break;
 	    }
 	}
@@ -445,7 +445,7 @@ void Referee::findEqSectorMulti(int& sector_first, int& sector_second)
     sector_second = n;
 }
 
-float Referee::findEqPointMulti(int first, int second, float& eq_first_point, float& eq_second_point)
+void Referee::findEqPointMulti(int first, int second)
 {
     float l, r, m, n;
     float fix_one, fix_two, fix_three;
@@ -564,30 +564,30 @@ float Referee::findEqPointMulti(int first, int second, float& eq_first_point, fl
 	}
     }
     	    cout << "******"<<  endl;
-	    cout << "f1 " << fix_one << " f2 " << fix_two << endl;
+	    cout << "f1 " << fix_one << " f2 " << fix_two << " res " << res_first << endl;
 	    cout << "******"<<  endl;
+	    vector<Piece*> pieces_list;
+	    Piece *piece;
     	    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
 	    {
 		player = itr->first;
 		switch(m_pieces_assigned.find(player)->second)
 		{
 		    case 0:
-			calculatePieceEvaluation(0, sector_first, 0, fix_one, itr->second, res_first); 
-				cout << "res first " << res_first<< endl;
+		      piece = new Piece(player, new CakeCut(player, 0, 0), new CakeCut(player, sector_first, fix_one));
+		      pieces_list.push_back(piece);
 		    break;
 		    case 1:
-			calculatePieceEvaluation(sector_first, sector_second , fix_one,  fix_two, itr->second, res_second); 
-			    cout << "res second " << res_second<< endl;
+		      piece = new Piece(player, new CakeCut(player, sector_first, fix_one), new CakeCut(player, sector_second, fix_two));
+		      pieces_list.push_back(piece);
 		    break;
 		    case 2:
-			calculatePieceEvaluation(sector_second , m_cake->get_size() - 1 , fix_two, 1, itr->second, res_third); 
-    			    cout << "res third " << res_third<< endl;
+		      piece = new Piece(player, new CakeCut(player, sector_second, fix_two), new CakeCut(player, m_cake->get_size() - 1, 1));
+		      pieces_list.push_back(piece);
 		    break;
 		}
 	    }
-	eq_first_point = fix_one;
-	eq_second_point = fix_two;
-	return res_first;
+	m_result_map.insert(make_pair(pieces_list, res_first));
 }
 
 bool Referee::isValidResult(float res_first, float res_second, float res_third)
@@ -596,4 +596,51 @@ bool Referee::isValidResult(float res_first, float res_second, float res_third)
       return false;
     
     return true;
+}
+
+void Referee::chooseBestCommonValue()
+{
+    map<vector<Piece*>, float >::iterator map_itr;   
+    vector<Piece*>::iterator list_itr;   
+
+    float max_res = 0, tmp_res;
+
+    vector<Piece*> best_common_cfg;
+    
+    for (map_itr = m_result_map.begin(); map_itr != m_result_map.end(); map_itr++)
+    {
+	tmp_res = map_itr->second;
+	if(tmp_res > max_res)
+	{
+	    max_res = tmp_res;
+	    best_common_cfg = map_itr->first;
+	}
+    }
+    
+    Piece *piece;
+    Player *player;
+    int left_sector, right_sector;
+    float left_point, right_point;
+    
+    for (list_itr = best_common_cfg.begin(); list_itr != best_common_cfg.end(); list_itr++)
+    {
+	piece = *list_itr;
+	player = (Player*)piece->get_owner();
+	left_sector = piece->get_left_cut_sector();
+	right_sector = piece->get_right_cut_sector();
+	left_point =  piece->get_left_cut_point();
+	right_point = piece->get_right_cut_point();
+	
+	if(left_point < MIN_ERR)
+	    left_point = 0;
+	if(right_point < MIN_ERR)
+	    right_point = 0;
+	
+	cout << "Player " << player->get_id() << " receives piece: "<< endl;
+	cout << "Sector " << left_sector <<  ", Point " << left_point << " <------> ";
+	cout << "Sector " << right_sector <<  ", Point " << right_point <<endl;
+    }
+    
+    cout << endl;
+    cout << "Each player evalues his own piece as: "<< max_res <<endl;
 }

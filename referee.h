@@ -27,6 +27,7 @@ public:
 private:
     map<Player*, map< int, float> > m_players_assigned;
     map<Player*, int> m_pieces_assigned;
+    map<vector<Piece*>, float> m_result_map;
     Piece *m_middle_piece;
     
     void assignPiece(Entity *owner, int sector_begin, float partial_begin,  int sector_end, float partial_end);
@@ -36,9 +37,12 @@ private:
     void findEqSectorMulti(int& sector_first, int& sector_second);
     
     float findEqPoint(int arg1);
-    float findEqPointMulti(int sector_first, int sector_second, float& eq_first_point, float& eq_second_point);
+    void findEqPointMulti(int sector_first, int sector_second);
+    
+    void chooseBestCommonValue();
     
     Player* getPlayerById(string m_id);
+
 };
 
 #endif // REFEREE_H

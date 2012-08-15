@@ -49,6 +49,7 @@ public:
     inline int get_right_cut_sector(){return m_right_cut->get_cut_sector();}
     inline float get_left_cut_point(){return m_left_cut->get_cut_point();}
     inline float get_right_cut_point(){return m_right_cut->get_cut_point();}
+    inline Entity* get_owner(){return m_owner;}
     
 private:
     Entity *m_owner;
