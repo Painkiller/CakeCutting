@@ -121,23 +121,36 @@ void Referee::handle_middle()
 void Referee::handle_equitability()
 {
     int eq_first_sector, eq_second_sector; 
-    
+    int size = m_players_assigned.size();
+    int i, j, k; 
     float eq_first_point, eq_second_point, middle_ev_first, middle_ev_second;
     float middle_other_ev_first, middle_other_ev_second;
-    
+    float common_value;
+	
     map<Player*, map<int, float> >::iterator itr;
     Player *player;
-    int i = 0;
+
     
-    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+    for(j = 0; j < fact(size); j++)
     {
-	player = itr->first;
-	m_pieces_assigned.insert(make_pair(player, i));
-	i++;
+	i = 0;
+	for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+	{
+	    if(j < size)
+		k = (j + i) % size;
+	    else
+		k = (j - i) % size;
+	    player = itr->first;
+	    m_pieces_assigned.insert(make_pair(player, k));
+	    i++;
+	}
+	
+	find_eq_sector_multi(eq_first_sector, eq_second_sector);
+	common_value = find_eq_point_multi(eq_first_sector, eq_second_sector, eq_first_point, eq_second_point);
+	
+	
+	clear_pieces();
     }
-    
-    find_eq_sector_multi(eq_first_sector, eq_second_sector);
-    find_eq_point_multi(eq_first_sector, eq_second_sector, eq_first_point, eq_second_point);
 }
 
 void Referee::assign_piece(string player_id, int sector_begin, float partial_begin,  int sector_end, float partial_end)
@@ -434,7 +447,7 @@ void Referee::find_eq_sector_multi(int& sector_first, int& sector_second)
     sector_second = n;
 }
 
-void Referee::find_eq_point_multi(int first, int second, float& eq_first_point, float& eq_second_point)
+float Referee::find_eq_point_multi(int first, int second, float& eq_first_point, float& eq_second_point)
 {
     float l, r, m, n;
     float fix_one, fix_two, fix_three;
@@ -574,6 +587,9 @@ void Referee::find_eq_point_multi(int first, int second, float& eq_first_point, 
 		    break;
 		}
 	    }
+	eq_first_point = fix_one;
+	eq_second_point = fix_two;
+	return res_first;
 }
 
 bool Referee::validate_results(float res_first, float res_second, float res_third)
