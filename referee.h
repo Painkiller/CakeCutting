@@ -27,9 +27,9 @@ public:
 private:
     map<Player*, map< int, float> > m_players_assigned;
     map<Player*, int> m_pieces_assigned;
-    Piece m_middle_piece;
+    Piece *m_middle_piece;
     
-    void assignPiece(string player_id, int sector_begin, float partial_begin,  int sector_end, float partial_end);
+    void assignPiece(Entity *owner, int sector_begin, float partial_begin,  int sector_end, float partial_end);
     bool isValidResult(float res_first, float res_second, float res_third);
 
     int findEqSector();

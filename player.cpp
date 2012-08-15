@@ -4,6 +4,7 @@ Player::Player(string id, Cake* cake)
 {
     m_id = id;
     m_cake = cake;
+    m_entity_type = PLAYER;
 }
 
 Player::~Player()
@@ -69,11 +70,11 @@ void Player::calculatePieceEvaluation()
 {
     int type;
     
-    int sect_begin = m_piece_assigned.m_begin.m_sector;
-    int sect_end = m_piece_assigned.m_end.m_sector;
+    int sect_begin = m_piece_assigned->get_left_cut_sector();
+    int sect_end = m_piece_assigned->get_right_cut_sector();
     
-    float part_begin = m_piece_assigned.m_begin.m_point;
-    float part_end = m_piece_assigned.m_end.m_point;
+    float part_begin = m_piece_assigned->get_left_cut_point();
+    float part_end = m_piece_assigned->get_right_cut_point();
     
     type = m_cake->get_type_at(sect_begin);
     m_piece_result = m_evaluation_map.find(type)->second * part_begin;
@@ -101,8 +102,8 @@ void Player::printPieceInfo()
 	
     cout << "Player "<< m_id << " piece of cake is:" << endl;
     
-    cout << "From sector " << m_piece_assigned.m_begin.m_sector << " point " << m_piece_assigned.m_begin.m_point << endl;
-    cout << "To sector " << m_piece_assigned.m_end.m_sector << " point " << m_piece_assigned.m_end.m_point << endl;
+    cout << "From sector " << m_piece_assigned->get_left_cut_sector() << " point " << m_piece_assigned->get_left_cut_point() << endl;
+    cout << "To sector " << m_piece_assigned->get_right_cut_sector() << " point " << m_piece_assigned->get_right_cut_point() << endl;
     
     cout << endl;
 }
@@ -115,28 +116,28 @@ void Player::cut()
 void Player::choose()
 {
     int type;
-    CakeCut ck = m_cake->get_cake_cut(0);
+    CakeCut *ck = m_cake->get_cake_cut(0);
 
     float first_ev, second_ev;
     
     first_ev = 0;
     second_ev = 0;
     
-    for(int i = 0; i < ck.m_sector; i++)
+    for(int i = 0; i < ck->get_cut_sector(); i++)
     {
 	type = m_cake->get_type_at(i);
 	first_ev += m_evaluation_map.find(type)->second;
     }
     
-    first_ev += m_evaluation_map.find(ck.m_sector)->second * ck.m_point;
+    first_ev += m_evaluation_map.find(ck->get_cut_sector())->second * ck->get_cut_point();
     cout << "Player B evaluates the first piece of cake as: "<< first_ev <<  endl;
-    for(int i = ck.m_sector + 1 ; i < N_SECTORS; i++)
+    for(int i = ck->get_cut_sector() + 1 ; i < N_SECTORS; i++)
     {
 	type = m_cake->get_type_at(i);
 	second_ev += m_evaluation_map.find(type)->second;
     }
     
-    second_ev += m_evaluation_map.find(ck.m_sector)->second * (1 - ck.m_point);
+    second_ev += m_evaluation_map.find(ck->get_cut_sector())->second * (1 - ck->get_cut_point());
     cout << "Player B evaluates the second piece of cake as: "<< second_ev <<  endl;
     if(first_ev > second_ev)
       m_chosen = 1;
@@ -162,5 +163,5 @@ void Player::calculateCut()
     part = diff / m_evaluation_map.find(type)->second;
     sector = i - 1;
     
-    m_cake->set_cake_cut(sector, part, m_id);
+    m_cake->set_cake_cut((Entity*)this, sector, part);
 }

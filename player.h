@@ -24,7 +24,7 @@ public:
     void cut();
     void choose();
     
-    inline void set_piece(Piece piece){m_piece_assigned = piece;}
+    inline void set_piece(Piece *piece){m_piece_assigned = piece;}
     inline string& get_id(){return m_id;}
     inline map<int, float> get_evaluation_map(){return m_evaluation_map;}
     
@@ -39,7 +39,7 @@ private:
     
     map<int, float> m_evaluation_map;
     
-    Piece m_piece_assigned;
+    Piece *m_piece_assigned;
     
     
     void calculateCut();
