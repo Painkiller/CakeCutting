@@ -26,7 +26,7 @@ public:
     
 private:
     map<Player*, map< int, float> > m_players_assigned;
-    map<Player*, int> m_pieces_assigned;
+    map<Entity*, int> m_pieces_assigned;
     map<vector<Piece*>, float> m_result_map;
     Piece *m_middle_piece;
     

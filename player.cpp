@@ -55,27 +55,35 @@ void Player::calculateTotalEvaluation()
     m_halfpoint = m_result / 2;
 }
 
-void Player::calculatePieceEvaluation()
+void Player::calculatePieceEvaluation(int sect_begin, int sect_end, float point_begin, float point_end, float& result)
 {
     int type;
     
-    int sect_begin = m_piece_assigned->get_left_cut_sector();
-    int sect_end = m_piece_assigned->get_right_cut_sector();
-    
-    float part_begin = m_piece_assigned->get_left_cut_point();
-    float part_end = m_piece_assigned->get_right_cut_point();
-    
     type = m_cake->get_type_at(sect_begin);
-    m_piece_result = m_evaluation_map.find(type)->second * part_begin;
     
-    for(int i = sect_begin + 1; i < sect_end - 1; i++)
+    if(sect_end < sect_begin)
     {
-	type = m_cake->get_type_at(i);
-	m_piece_result += m_evaluation_map.find(type)->second;
+	result = 0;
+	return;
     }
-    
-    type = m_cake->get_type_at(sect_end);
-    m_piece_result = m_evaluation_map.find(type)->second * part_end;
+    if(sect_begin == sect_end)
+      result = m_norm_evaluation_map.find(type)->second * (point_end - point_begin);
+    else
+      result = m_norm_evaluation_map.find(type)->second * (1 - point_begin);
+
+    if(sect_begin != sect_end)
+    {
+	if( (sect_begin + 1) != sect_end)
+	{
+	    for(int i = (sect_begin + 1); i < sect_end; i++)
+	    {
+		type = m_cake->get_type_at(i);
+		result += m_norm_evaluation_map.find(type)->second;
+	    }
+	}
+	type = m_cake->get_type_at(sect_end);
+	result += m_norm_evaluation_map.find(type)->second * point_end;
+    }
 }
 
 
@@ -126,7 +134,7 @@ void Player::choose()
 	second_ev += m_norm_evaluation_map.find(type)->second;
     }
     
-    second_ev += m_evaluation_map.find(ck->get_cut_sector())->second * (1 - ck->get_cut_point());
+    second_ev += m_evaluation_map.find(ck->get_cut_sector())->second * (ck->get_cut_point());
     cout << "Player B evaluates the second piece of cake as: "<< second_ev <<  endl;
     if(first_ev > second_ev)
       m_chosen = 1;
@@ -152,5 +160,5 @@ void Player::calculateCut()
     part = diff / m_norm_evaluation_map.find(type)->second;
     sector = i - 1;
     
-    m_cake->set_cake_cut((Entity*)this, sector, part);
+    m_cake->setCakeCut((Entity*)this, sector, part);
 }

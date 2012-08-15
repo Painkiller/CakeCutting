@@ -1,5 +1,7 @@
 #include "cake.h"
 #include <stdlib.h>
+#include "player.h"
+#include "referee.h"
 
 Cake::Cake()
 {
@@ -19,7 +21,7 @@ void Cake::buildCake()
     for(int i = 0; i < N_SECTORS; i++)
     {
 	value = rand() % N_SECTOR_TYPE;
-	m_sectors.push_back(values[i]);
+	m_sectors.push_back(value);
 // 	m_sectors.push_back(values[i]);
     }
 }
@@ -33,4 +35,21 @@ void Cake::printSectors()
     }
     cout << endl;
     cout << endl;
+}
+
+void Cake::setCakeCut(Entity* cutter, int sector, float point)
+{
+    {
+	CakeCut *ck = new CakeCut(cutter, sector, point);
+	
+	if(cutter->isPlayer())
+	{
+	    cout << "Player " << cutter->get_id() << " cuts the cake at sector " << sector << " at point " << point << endl;
+	}
+	else
+	{
+	    cout << "Referee cuts the cake at sector " << sector << " at point " << point << endl;
+	}
+	m_cake_cut.push_back(ck);
+    }
 }

@@ -8,11 +8,11 @@ class Entity
 public:
     Entity();
     virtual ~Entity();
-//     void build_evaluation_map();
     virtual void calculateTotalEvaluation(){}
-//     void print_total_evaluation();
     virtual void cut(Cake* cake){}
-//     void choose(Cake* cake);
+    virtual void set_piece(Piece* piece){};
+    virtual string& get_id(){};
+    
     inline bool isPlayer()
     {
 	if(m_entity_type == PLAYER)

@@ -8,6 +8,8 @@
 
 using namespace std;
 class Entity;
+class Player;
+class Referee;
 
 class CakeCut
 {
@@ -21,9 +23,9 @@ public:
     ~CakeCut(){}
     
 
-    Entity* get_cutter(){return m_cutter;}
-    int get_cut_sector(){return m_cut_sector;}
-    float get_cut_point(){return m_cut_point;}
+    inline Entity* get_cutter(){return m_cutter;}
+    inline int get_cut_sector(){return m_cut_sector;}
+    inline float get_cut_point(){return m_cut_point;}
     
 private:
     Entity* m_cutter;
@@ -64,16 +66,7 @@ public:
     Cake();
     virtual ~Cake();
     
-    void buildCake();
-    
     inline int get_type_at(int pos){return m_sectors[pos];}
-    inline void set_cake_cut(Entity *cutter, int sector, float point)
-    {
-	CakeCut *ck = new CakeCut(cutter, sector, point);
-	
-	m_cake_cut.push_back(ck);
-// 	cout << "Player " << player->get_id() << " cuts the cake at sector " << sector << " at point " << point << endl;
-    }
     inline int get_size(){return m_sectors.size();}
     
     inline CakeCut* get_cake_cut(int pos){return m_cake_cut[pos];}
@@ -86,6 +79,8 @@ public:
       m_cake_cut.clear();
     }
 	
+    void buildCake();
+    void setCakeCut(Entity *cutter, int sector, float point);
     void printSectors();
 
 private:

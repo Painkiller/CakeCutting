@@ -33,7 +33,9 @@ int main(int argc, char **argv)
     
     
     //***Cut & Choose Method***
-    
+    cout << endl;
+    cout <<"*************CUT AND CHOOSE************" << endl;
+    cout << endl;
     cutAndChoose(player_a, player_b);
     
     //Clear previous cuts

@@ -18,7 +18,7 @@ public:
     virtual ~Player();
     void buildEvaluationMap();
     void calculateTotalEvaluation();
-    void calculatePieceEvaluation();
+    void calculatePieceEvaluation(int sect_begin, int sect_end, float point_begin, float point_end, float& result);
     void printTotalEvaluation();
     void printPieceInfo();
     void cut();
