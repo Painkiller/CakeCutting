@@ -14,7 +14,7 @@ class Player : public Entity
 {
 
 public:
-    Player(string id, Cake* cake);
+    Player(string id, Cake* cake, int behaviour);
     virtual ~Player();
     void buildEvaluationMap();
     void calculateTotalEvaluation();
@@ -25,8 +25,13 @@ public:
     void choose();
     
     inline void set_piece(Piece *piece){m_piece_assigned = piece;}
+    inline void clear_piece()
+    {
+
+    }
     inline string& get_id(){return m_id;}
     inline map<int, float> get_evaluation_map(){return m_norm_evaluation_map;}
+    void printRealEvaluation();
     
 private:
     float m_result;
@@ -34,11 +39,13 @@ private:
     float m_halfpoint;
     
     int m_chosen;
-
+    int m_behaviour;
+    
     string m_id;
     
     map<int, float> m_evaluation_map;
     map<int, float> m_norm_evaluation_map;
+    map<int, float> m_true_evaluation_map;
 
     Piece *m_piece_assigned;
     

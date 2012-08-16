@@ -16,8 +16,8 @@ int main(int argc, char **argv)
 
     Cake *cake = new Cake();
    
-    Player *player_a = new Player("A", cake);
-    Player *player_b = new Player("B", cake);
+    Player *player_a = new Player("A", cake, CHEATER);
+    Player *player_b = new Player("B", cake, HONEST);
     
     Referee *referee = new Referee(cake);
     
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     cout <<"*************EQUITABILITY PROCEDURE************" << endl;
     cout << endl;
     
-    Player *player_c = new Player("C", cake);
+    Player *player_c = new Player("C", cake, HONEST);
     player_c->buildEvaluationMap();
     
     equitabilityProcedure(player_a, player_b, player_c, referee);
@@ -92,10 +92,14 @@ void surplusProcedure(Player *player_a, Player *player_b, Referee *referee)
     player_b->printPieceInfo();
     
     referee->handleMiddle();
+    
+    player_a->printRealEvaluation();
+
 }
 
 void equitabilityProcedure(Player *player_a, Player *player_b, Player *player_c, Referee *referee)
 {
     referee->assignPlayer(player_c);
     referee->handleEquitability();
+    player_a->printRealEvaluation();
 }

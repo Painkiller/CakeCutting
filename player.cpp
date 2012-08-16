@@ -1,10 +1,11 @@
 #include "player.h"
 
-Player::Player(string id, Cake* cake)
+Player::Player(string id, Cake* cake, int behaviour)
 {
     m_id = id;
     m_cake = cake;
     m_entity_type = PLAYER;
+    m_behaviour = behaviour;
 }
 
 Player::~Player()
@@ -38,7 +39,50 @@ void Player::buildEvaluationMap()
 	m_norm_evaluation_map.insert(make_pair(i, norm_evaluation));
 	cout<< i << " -> " << norm_evaluation<<endl;
     }
-     cout<<endl;
+
+     m_true_evaluation_map = m_norm_evaluation_map;
+  
+    if(m_behaviour == CHEATER)
+    {
+	cout<<endl;
+	cout<< "Player "<< get_id() <<" TRUE evaluation map:"<<endl;
+
+	float val, add_half, sub_half;
+	float val_max = 0, val_min = INF;
+	int ind_max, ind_min;
+	for(int i = 0; i < N_SECTOR_TYPE; i++)
+	{
+	    val =  m_evaluation_map.find(i)->second * m_cake->countSectorOccurrences(i);
+	    if(val)
+	    {
+		if(val <= val_min)
+		{
+		    val_min = val;
+		    ind_min = i;
+		}
+		if(val >= val_max)
+		{
+		    val_max = val;
+		    ind_max = i;
+		}
+	    }
+	}
+	
+	val_min /= 2;
+	add_half = val_min / m_cake->countSectorOccurrences(ind_max);
+	sub_half = val_min / m_cake->countSectorOccurrences(ind_min);
+	
+	m_evaluation_map.find(ind_max)->second += add_half;
+	m_evaluation_map.find(ind_min)->second -= sub_half;
+	
+	for(int i = 0; i < N_SECTOR_TYPE; i++)
+	{
+	    norm_evaluation = m_evaluation_map[i] / overall;
+	    m_true_evaluation_map.find(i)->second = norm_evaluation;
+	    cout<< i << " -> " << norm_evaluation<<endl;
+	}
+    }
+    cout<<endl;
 }
 
 void Player::calculateTotalEvaluation()
@@ -67,9 +111,9 @@ void Player::calculatePieceEvaluation(int sect_begin, int sect_end, float point_
 	return;
     }
     if(sect_begin == sect_end)
-      result = m_norm_evaluation_map.find(type)->second * (point_end - point_begin);
+      result = m_true_evaluation_map.find(type)->second * (point_end - point_begin);
     else
-      result = m_norm_evaluation_map.find(type)->second * (1 - point_begin);
+      result = m_true_evaluation_map.find(type)->second * (1 - point_begin);
 
     if(sect_begin != sect_end)
     {
@@ -78,11 +122,11 @@ void Player::calculatePieceEvaluation(int sect_begin, int sect_end, float point_
 	    for(int i = (sect_begin + 1); i < sect_end; i++)
 	    {
 		type = m_cake->get_type_at(i);
-		result += m_norm_evaluation_map.find(type)->second;
+		result += m_true_evaluation_map.find(type)->second;
 	    }
 	}
 	type = m_cake->get_type_at(sect_end);
-	result += m_norm_evaluation_map.find(type)->second * point_end;
+	result += m_true_evaluation_map.find(type)->second * point_end;
     }
 }
 
@@ -157,8 +201,17 @@ void Player::calculateCut()
 	i++;
     }
     diff = ev - m_halfpoint;
-    part = diff / m_norm_evaluation_map.find(type)->second;
+    part = ( m_norm_evaluation_map.find(type)->second - diff )/ m_norm_evaluation_map.find(type)->second;
     sector = i - 1;
     
     m_cake->setCakeCut((Entity*)this, sector, part);
+}
+
+void Player::printRealEvaluation()
+{
+    float result;
+    
+    calculatePieceEvaluation(m_piece_assigned->get_left_cut_sector(), m_piece_assigned->get_right_cut_sector(), m_piece_assigned->get_left_cut_point(), m_piece_assigned->get_right_cut_point(), result);
+    
+    cout << "Player "<< m_id << " real evaluation of his own piece is :" << result << endl;
 }

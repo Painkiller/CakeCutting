@@ -52,6 +52,9 @@ public:
     inline float get_left_cut_point(){return m_left_cut->get_cut_point();}
     inline float get_right_cut_point(){return m_right_cut->get_cut_point();}
     inline Entity* get_owner(){return m_owner;}
+    inline void clear()
+    {
+    }
     
 private:
     Entity *m_owner;
@@ -82,6 +85,8 @@ public:
     void buildCake();
     void setCakeCut(Entity *cutter, int sector, float point);
     void printSectors();
+    
+    int countSectorOccurrences(int sec_type);
 
 private:
     float m_partial;

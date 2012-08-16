@@ -22,7 +22,15 @@ public:
     void handleMiddle();
     void handleEquitability();
     
-    inline void clear_pieces(){m_pieces_assigned.clear();}
+    inline void clear_pieces()
+    {
+	m_pieces_assigned.clear();
+	map<Player*, map<int, float> >::iterator itr;
+	for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
+	{
+	    itr->first->clear_piece();;
+	}
+    }
     
 private:
     map<Player*, map< int, float> > m_players_assigned;

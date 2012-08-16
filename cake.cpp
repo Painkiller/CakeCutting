@@ -43,13 +43,21 @@ void Cake::setCakeCut(Entity* cutter, int sector, float point)
 	CakeCut *ck = new CakeCut(cutter, sector, point);
 	
 	if(cutter->isPlayer())
-	{
 	    cout << "Player " << cutter->get_id() << " cuts the cake at sector " << sector << " at point " << point << endl;
-	}
 	else
-	{
 	    cout << "Referee cuts the cake at sector " << sector << " at point " << point << endl;
-	}
 	m_cake_cut.push_back(ck);
     }
+}
+
+int Cake::countSectorOccurrences(int sec_type)
+{
+    int count = 0;
+    
+    for(int i = 0; i < N_SECTORS; i++)
+    {
+	if(m_sectors[i] == sec_type)
+	    count++;
+    }
+    return count;
 }
