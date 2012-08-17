@@ -24,12 +24,13 @@ public:
     
     inline void clear_pieces()
     {
-	m_pieces_assigned.clear();
 	map<Player*, map<int, float> >::iterator itr;
 	for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
 	{
-	    itr->first->clear_piece();;
+	    itr->first->clear_piece();
 	}
+	m_pieces_assigned.clear();
+
     }
     
 private:

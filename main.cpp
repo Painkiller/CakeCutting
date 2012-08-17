@@ -73,6 +73,9 @@ void cutAndChoose(Player *player_a, Player *player_b)
     
     //choose
     player_b->choose();
+    player_a->take();
+    cout << endl;
+    player_a->printRealEvaluation();
 }
 
 void surplusProcedure(Player *player_a, Player *player_b, Referee *referee)

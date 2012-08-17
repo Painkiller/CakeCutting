@@ -1,4 +1,5 @@
 #include "player.h"
+#include <set>
 
 Player::Player(string id, Cake* cake, int behaviour)
 {
@@ -133,8 +134,9 @@ void Player::calculatePieceEvaluation(int sect_begin, int sect_end, float point_
 
 void Player::printTotalEvaluation()
 {
-    cout << "Player "<< m_id << " evaluates the whole cake as:" << endl;
+    cout << "Player "<< m_id << " evaluates the whole cake as:";
     cout << m_result << endl;
+    cout << endl;
 }
 
 void Player::printPieceInfo()
@@ -157,33 +159,30 @@ void Player::cut()
 void Player::choose()
 {
     int type;
+    float first_ev, second_ev;
     CakeCut *ck = m_cake->get_cake_cut(0);
 
-    float first_ev, second_ev;
+    calculatePieceEvaluation(0, ck->get_cut_sector(), 0, ck->get_cut_point(), first_ev);
+    cout << "Player " << m_id << " evaluates the first piece of cake as: "<< first_ev <<  endl;
+
+    calculatePieceEvaluation(ck->get_cut_sector(), N_SECTORS - 1 , ck->get_cut_point(), 1, second_ev);
+    cout << "Player " << m_id << " evaluates the second piece of cake as: "<< second_ev <<  endl;
     
-    first_ev = 0;
-    second_ev = 0;
+    Piece *left_piece;
+    Piece *right_piece;
     
-    for(int i = 0; i < ck->get_cut_sector(); i++)
-    {
-	type = m_cake->get_type_at(i);
-	first_ev += m_norm_evaluation_map.find(type)->second;
-    }
-    
-    first_ev += m_norm_evaluation_map.find(ck->get_cut_sector())->second * ck->get_cut_point();
-    cout << "Player B evaluates the first piece of cake as: "<< first_ev <<  endl;
-    for(int i = ck->get_cut_sector() + 1 ; i < N_SECTORS; i++)
-    {
-	type = m_cake->get_type_at(i);
-	second_ev += m_norm_evaluation_map.find(type)->second;
-    }
-    
-    second_ev += m_evaluation_map.find(ck->get_cut_sector())->second * (ck->get_cut_point());
-    cout << "Player B evaluates the second piece of cake as: "<< second_ev <<  endl;
     if(first_ev > second_ev)
-      m_chosen = 1;
+    {
+	left_piece = new Piece(this, new CakeCut(this, 0, 0), ck);
+	set_piece(left_piece);
+	m_cake->set_chosen(0);
+    }
     else
-      m_chosen = 2;
+    {
+	right_piece = new Piece(this, ck, new CakeCut(this, N_SECTORS - 1, 1));
+	set_piece(right_piece);
+	m_cake->set_chosen(0);
+    }
 }
 
 void Player::calculateCut()
@@ -200,7 +199,7 @@ void Player::calculateCut()
 	ev += m_norm_evaluation_map.find(type)->second;
 	i++;
     }
-    diff = ev - m_halfpoint;
+    diff = fabs(ev - m_halfpoint);
     part = ( m_norm_evaluation_map.find(type)->second - diff )/ m_norm_evaluation_map.find(type)->second;
     sector = i - 1;
     
@@ -214,4 +213,20 @@ void Player::printRealEvaluation()
     calculatePieceEvaluation(m_piece_assigned->get_left_cut_sector(), m_piece_assigned->get_right_cut_sector(), m_piece_assigned->get_left_cut_point(), m_piece_assigned->get_right_cut_point(), result);
     
     cout << "Player "<< m_id << " real evaluation of his own piece is :" << result << endl;
+}
+
+void Player::take()
+{	
+    Piece *left_piece;
+    Piece *right_piece;
+    
+    if(m_cake->get_chosen() == 1)
+    {
+	left_piece = new Piece(this, new CakeCut(this, 0, 0), m_cake->get_cake_cut(0));
+	set_piece(left_piece);    }
+    else
+    {
+	right_piece = new Piece(this, m_cake->get_cake_cut(0), new CakeCut(this, N_SECTORS - 1, 1));
+	set_piece(right_piece); 
+    }
 }

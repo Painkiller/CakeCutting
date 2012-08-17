@@ -3,6 +3,7 @@
 #include <map>
 #include <stdlib.h>
 #include <string>
+#include <math.h>
 
 #include "entity.h"
 #include "cake.h"
@@ -32,6 +33,7 @@ public:
     inline string& get_id(){return m_id;}
     inline map<int, float> get_evaluation_map(){return m_norm_evaluation_map;}
     void printRealEvaluation();
+    void take();
     
 private:
     float m_result;

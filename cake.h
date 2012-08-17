@@ -81,7 +81,9 @@ public:
 	  delete m_cake_cut[i];
       m_cake_cut.clear();
     }
-	
+    inline void set_chosen(int chosen){m_chosen = chosen;}
+    inline int get_chosen(){return m_chosen;}
+    
     void buildCake();
     void setCakeCut(Entity *cutter, int sector, float point);
     void printSectors();
@@ -89,6 +91,7 @@ public:
     int countSectorOccurrences(int sec_type);
 
 private:
+    int m_chosen;
     float m_partial;
     
     vector<int> m_sectors;
