@@ -1,9 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <map>
-#include <stdlib.h>
 #include <string>
+#include <fstream>
 #include <math.h>
+#include <stdlib.h>
+
 
 #include "entity.h"
 #include "cake.h"
@@ -17,7 +19,7 @@ class Player : public Entity
 public:
     Player(string id, Cake* cake, int behaviour);
     virtual ~Player();
-    void buildEvaluationMap();
+    void buildEvaluationMap(int problem);
     void calculateTotalEvaluation();
     void calculatePieceEvaluation(int sect_begin, int sect_end, float point_begin, float point_end, float& result);
     void printTotalEvaluation();

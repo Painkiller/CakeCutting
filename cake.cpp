@@ -13,23 +13,49 @@ Cake::~Cake()
 
 }
 
-void Cake::buildCake()
+void Cake::buildCake(int problem)
 {
     int value;
-    int values[8] = {3,4,4,1,4,4,3,2}; 
+    int n_sectors;
     
-    for(int i = 0; i < N_SECTORS; i++)
-    {
-	value = rand() % N_SECTOR_TYPE;
-	m_sectors.push_back(value);
-// 	m_sectors.push_back(values[i]);
-    }
+    	switch(problem)
+	{
+	    case RANDOM:
+	    {
+		cout << "Insert number of sectors:";
+		cin >> n_sectors;
+		cout << endl;
+		
+		cout << "Insert number of sector types:";
+		cin >> m_sector_types;
+		cout << endl;
+		
+		
+		for(int i = 0; i < n_sectors; i++)
+		{
+		    value = rand() % m_sector_types;
+		    m_sectors.push_back(value);
+		}
+		break;
+	    }
+	    case BOSNIA:
+	    {
+		m_sector_types = N_BOSNIA_SECTORS;
+		for(int i = 0; i < N_BOSNIA_SECTORS; i++)
+		{
+		    value = i;
+		    m_sectors.push_back(value);
+		}
+		break;
+	    }
+	    
+	}
 }
 
 void Cake::printSectors()
 {
     cout << "Sectors in the cake:" << endl;
-    for(int i = 0; i < N_SECTORS; i++)
+    for(int i = 0; i < m_sectors.size(); i++)
     {
 	cout << m_sectors[i] << " ";
     }
@@ -54,7 +80,7 @@ int Cake::countSectorOccurrences(int sec_type)
 {
     int count = 0;
     
-    for(int i = 0; i < N_SECTORS; i++)
+    for(int i = 0; i < m_sectors.size(); i++)
     {
 	if(m_sectors[i] == sec_type)
 	    count++;

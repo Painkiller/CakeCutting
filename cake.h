@@ -71,6 +71,7 @@ public:
     
     inline int get_type_at(int pos){return m_sectors[pos];}
     inline int get_size(){return m_sectors.size();}
+    inline int get_n_sector_type(){return m_sector_types;}
     
     inline CakeCut* get_cake_cut(int pos){return m_cake_cut[pos];}
     inline vector<CakeCut*> get_cake_cut_list(){return m_cake_cut;}
@@ -84,7 +85,7 @@ public:
     inline void set_chosen(int chosen){m_chosen = chosen;}
     inline int get_chosen(){return m_chosen;}
     
-    void buildCake();
+    void buildCake(int problem);
     void setCakeCut(Entity *cutter, int sector, float point);
     void printSectors();
     
@@ -92,6 +93,7 @@ public:
 
 private:
     int m_chosen;
+    int m_sector_types;
     float m_partial;
     
     vector<int> m_sectors;

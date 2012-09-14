@@ -13,7 +13,10 @@ void equitabilityProcedure(Player *player_a, Player *player_b, Player *player_c,
 int main(int argc, char **argv) 
 {    
     srand(time(0));
-
+    
+    int problem;
+    bool skip = false;
+    
     Cake *cake = new Cake();
    
     Player *player_a = new Player("A", cake, CHEATER);
@@ -21,15 +24,36 @@ int main(int argc, char **argv)
     
     Referee *referee = new Referee(cake);
     
+    while(!skip)
+    {
+	cout <<"Select initialization of the problem: (0: Random, 1: Bosnia)" << endl;
+	cin >> problem;
+    
+	switch(problem)
+	{	
+	  case RANDOM:
+	  {
+	      skip = true;
+	      break;
+	  }
+	  case BOSNIA:
+	  {
+	      skip = true;
+	      break;
+	  }
+	  default:
+	    break;
+	}
+    }
     //building cake
-    cake->buildCake();
+    cake->buildCake(problem);
     
     cake->printSectors();
     
     //building players' evaluations
     
-    player_a->buildEvaluationMap();
-    player_b->buildEvaluationMap();
+    player_a->buildEvaluationMap(problem);
+    player_b->buildEvaluationMap(problem);
     
     
     //***Cut & Choose Method***
@@ -54,7 +78,7 @@ int main(int argc, char **argv)
     cout << endl;
     
     Player *player_c = new Player("C", cake, HONEST);
-    player_c->buildEvaluationMap();
+    player_c->buildEvaluationMap(problem);
     
     equitabilityProcedure(player_a, player_b, player_c, referee);
     
