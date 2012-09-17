@@ -30,8 +30,9 @@ public:
 	    itr->first->clear_piece();
 	}
 	m_pieces_assigned.clear();
-
     }
+    void unassign_players(){m_players_assigned.clear();}
+    void clear_result_map(){m_result_map.clear();}
     
 private:
     map<Player*, map< int, float> > m_players_assigned;

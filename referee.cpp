@@ -102,19 +102,23 @@ void Referee::handleMiddle()
 	    
 	    calculatePieceEvaluation(m_middle_piece->get_left_cut_sector(), eq_sector, m_middle_piece->get_left_cut_point(), eq_point, itr->second, middle_ev_first); 
 	    calculatePieceEvaluation(eq_sector, m_middle_piece->get_right_cut_sector(), eq_point, m_middle_piece->get_right_cut_point(), itr->second, middle_other_ev_first);
-	    
-	    cout << "Playerr " << player->get_id() << " receives suprlus piece from sector: "<< endl;
-	    cout << "Sector " << m_middle_piece->get_left_cut_sector() << " point " << m_middle_piece->get_left_cut_point() << " <-------> Sector " << eq_sector << " point " << eq_point <<endl;
-	    cout << "Player " << player->get_id() << " evaluation of his own surplus is " << middle_ev_first << endl;
-	    cout << "Player " << player->get_id() << " evaluation of the other surplus is " << middle_other_ev_first << endl;
-	    
+	    if(isLogEnabled())
+	    {
+		cout << "Playerr " << player->get_id() << " receives suprlus piece from sector: "<< endl;
+		cout << "Sector " << m_middle_piece->get_left_cut_sector() << " point " << m_middle_piece->get_left_cut_point() << " <-------> Sector " << eq_sector << " point " << eq_point <<endl;
+		cout << "Player " << player->get_id() << " evaluation of his own surplus is " << middle_ev_first << endl;
+		cout << "Player " << player->get_id() << " evaluation of the other surplus is " << middle_other_ev_first << endl;
+	    }
 	    m_pieces_assigned.erase(player);
 	    assignPiece(player, 0, 0, eq_sector, eq_point);
-	    
-	    cout << endl;
+	    if(isLogEnabled())
+		cout << endl;
 	    calculatePieceEvaluation(0, eq_sector, 0, eq_point, itr->second, res);
-	    cout << "Player " << player->get_id() << " evalues his own piece as: "<< res <<endl;
-	    cout << endl;
+	    if(isLogEnabled())
+	    {
+		cout << "Player " << player->get_id() << " evalues his own piece as: "<< res <<endl;
+		cout << endl;
+	    }
 	}
 	else
 	{
@@ -122,19 +126,23 @@ void Referee::handleMiddle()
 	    
 	    calculatePieceEvaluation(eq_sector, m_middle_piece->get_right_cut_sector(), eq_point, m_middle_piece->get_right_cut_point(), itr->second, middle_ev_second);
 	    calculatePieceEvaluation(m_middle_piece->get_left_cut_sector(), eq_sector, m_middle_piece->get_left_cut_point(), eq_point, itr->second, middle_other_ev_second); 
-
-	    cout << "Player " << player->get_id() << " receives suprlus piece from: " << endl;
-	    cout << "Sector "<<  eq_sector << ", point " << eq_point << " <-------> Sector "<< m_middle_piece->get_right_cut_sector() << ", point " <<  m_middle_piece->get_right_cut_point() <<endl;
-	    cout << "Player " << player->get_id() << " evaluation of his own surplus is " << middle_ev_second << endl;
-	    cout << "Player " << player->get_id() << " evaluation of the other surplus is " << middle_other_ev_second << endl;
-	    
+	    if(isLogEnabled())
+	    {
+		cout << "Player " << player->get_id() << " receives suprlus piece from: " << endl;
+		cout << "Sector "<<  eq_sector << ", point " << eq_point << " <-------> Sector "<< m_middle_piece->get_right_cut_sector() << ", point " <<  m_middle_piece->get_right_cut_point() <<endl;
+		cout << "Player " << player->get_id() << " evaluation of his own surplus is " << middle_ev_second << endl;
+		cout << "Player " << player->get_id() << " evaluation of the other surplus is " << middle_other_ev_second << endl;
+	    }
 	    m_pieces_assigned.erase(player);
 	    assignPiece(player, eq_sector, eq_point, m_cake->get_size() -1, 1);
-	    
-	    cout << endl;
+	    if(isLogEnabled())
+		cout << endl;
 	    calculatePieceEvaluation(eq_sector, m_cake->get_size() -1, eq_point, 1, itr->second, res);
-	    cout << "Player " << player->get_id() << " evalues his own piece as: "<< res <<endl;
-	    cout << endl;
+	    if(isLogEnabled())
+	    {
+		cout << "Player " << player->get_id() << " evalues his own piece as: "<< res <<endl;
+		cout << endl;
+	    }
 	}
     }
 }
@@ -325,7 +333,8 @@ float Referee::findEqPoint(int sector)
 	else
 	  r = mid;
     }
-    cout << "Sector: " << sector << "; Point " << l << endl;
+    if(isLogEnabled())    
+	cout << "Sector: " << sector << "; Point " << l << endl;
     return l;
 }
 
@@ -351,7 +360,7 @@ void Referee::findEqSectorMulti(int& sector_first, int& sector_second)
     fix_one = m;
     fix_two = n;
     
-    cout << "n " << n << " m " << m << " l " << l<< " r "<< r << endl;
+//     cout << "n " << n << " m " << m << " l " << l<< " r "<< r << endl;
     while(!found)
     {
 	for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
@@ -538,9 +547,12 @@ void Referee::findEqPointMulti(int first, int second)
 	    fix_two = n;
 	}
     }
-    cout << "******"<<  endl;
-    cout << "f1 " << fix_one << " f2 " << fix_two << " res " << res_first << endl;
-    cout << "******"<<  endl;
+    if(isLogEnabled())
+    {
+	cout << "******"<<  endl;
+	cout << "f1 " << fix_one << " f2 " << fix_two << " res " << res_first << endl;
+	cout << "******"<<  endl;
+    }
     vector<Piece*> pieces_list;
     Piece *piece;
     for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
@@ -612,11 +624,16 @@ void Referee::chooseBestCommonValue()
 	    right_point = 0;
 	
 	assignPiece(owner, left_sector, left_point, right_sector, right_point);
-	cout << "Player " << owner->get_id() << " receives piece: "<< endl;
-	cout << "Sector " << left_sector <<  ", Point " << left_point << " <------> ";
-	cout << "Sector " << right_sector <<  ", Point " << right_point <<endl;
+	if(isLogEnabled())
+	{
+	    cout << "Player " << owner->get_id() << " receives piece: "<< endl;
+	    cout << "Sector " << left_sector <<  ", Point " << left_point << " <------> ";
+	    cout << "Sector " << right_sector <<  ", Point " << right_point <<endl;
+	}
     }
-    
-    cout << endl;
-    cout << "Each player evalues his own piece as: "<< max_res <<endl;
+    if(isLogEnabled())
+    {
+	cout << endl;
+	cout << "Each player evalues his own piece as: "<< max_res <<endl;
+    }
 }

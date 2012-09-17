@@ -1,5 +1,7 @@
 #include "util.h"
 
+// bool util::log_enabled;
+
 int util::fact (int n) 
 { 
     int r = 1; 
@@ -8,4 +10,16 @@ int util::fact (int n)
 	r *= i; 
     }
     return r; 
+}
+
+bool util::isLogEnabled()
+{
+    if(log_enabled)
+	return true;
+    return false;
+}
+
+void util::enableLog(bool var)
+{
+    log_enabled = var;
 }
