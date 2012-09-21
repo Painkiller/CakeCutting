@@ -184,20 +184,40 @@ void Referee::handleEquitability()
 
 void Referee::assignPiece(Entity *owner, int sector_begin, float partial_begin,  int sector_end, float partial_end)
 {
-    CakeCut *cut_left = new CakeCut(owner, sector_begin, partial_begin);
-    CakeCut *cut_right = new CakeCut(owner, sector_end, partial_end);
-    Piece *piece = new Piece(owner, cut_left, cut_right);
+    CakeCut *cut_left; /*= new CakeCut(owner, sector_begin, partial_begin);*/
+    CakeCut *cut_right;/* = new CakeCut(owner, sector_end, partial_end);*/
+    Piece *piece;/* = new Piece(owner, cut_left, cut_right);*/
     
     if(owner != this)
     {
-	owner->set_piece(piece);
+	
 	if(sector_begin == 0)
+	{
+	    piece = m_cake->get_piece(0);
 	    m_pieces_assigned.insert(make_pair(owner, 0));
+	}
+	else if(sector_end == m_cake->get_size() - 1)
+	{
+	    piece = m_cake->get_piece(2);
+	    m_pieces_assigned.insert(make_pair(owner, 2));
+	}
 	else
+	{
+	    piece = m_cake->get_piece(1);
 	    m_pieces_assigned.insert(make_pair(owner, 1));
+	}
     }
     else
+    {
+	piece = m_cake->get_piece(-1);
 	m_middle_piece = piece;
+    }
+    cut_left = piece->get_ck_left();
+    cut_right = piece->get_ck_right();
+    cut_left->set_cakecut(owner, sector_begin, partial_begin);
+    cut_right-> set_cakecut(owner, sector_end, partial_end);
+    piece->set_piece(owner, cut_left, cut_right);
+    owner->set_piece(piece);
 }
 
 Player* Referee::getPlayerById(string m_cutter_id)
@@ -414,19 +434,19 @@ void Referee::findEqSectorMulti(int& sector_first, int& sector_second)
 	    {
 	      case 0:
 	      {
-		m -= 1;
+		m --;
 		break;
 	      }
 		
 	      case 1:
 	      {
-		m += 1;
-		n -= 1;
+		m ++;
+		n --;
 		break;
 	      }
 	      
 	      case 2:
-		n += 1;
+		n ++;
 		break;
 	    }
 	}
@@ -553,26 +573,37 @@ void Referee::findEqPointMulti(int first, int second)
 	cout << "f1 " << fix_one << " f2 " << fix_two << " res " << res_first << endl;
 	cout << "******"<<  endl;
     }
+    
     vector<Piece*> pieces_list;
     Piece *piece;
+    CakeCut *cut_left, *cut_right;
+    
     for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
     {
 	player = itr->first;
+	piece = m_cake->get_piece(m_pieces_assigned.find(player)->second);
+	cut_left = piece->get_ck_left();
+	cut_right = piece->get_ck_right();
+	
 	switch(m_pieces_assigned.find(player)->second)
 	{
 	    case 0:
-	      piece = new Piece(player, new CakeCut(player, 0, 0), new CakeCut(player, sector_first, fix_one));
-	      pieces_list.push_back(piece);
+	      cut_left->set_cakecut(player, 0, 0);
+	      cut_right->set_cakecut(player, sector_first, fix_one);
+
 	    break;
 	    case 1:
-	      piece = new Piece(player, new CakeCut(player, sector_first, fix_one), new CakeCut(player, sector_second, fix_two));
-	      pieces_list.push_back(piece);
+	      cut_left->set_cakecut(player, sector_first, fix_one);
+	      cut_right->set_cakecut(player, sector_second, fix_two);
+
 	    break;
 	    case 2:
-	      piece = new Piece(player, new CakeCut(player, sector_second, fix_two), new CakeCut(player, m_cake->get_size() - 1, 1));
-	      pieces_list.push_back(piece);
+	      cut_left->set_cakecut(player, sector_second, fix_two);
+	      cut_right->set_cakecut(player, m_cake->get_size() - 1, 1);
 	    break;
 	}
+	piece->set_piece(player, cut_left, cut_right);
+	pieces_list.push_back(piece);
     }
     m_result_map.insert(make_pair(pieces_list, res_first));
 }
@@ -609,6 +640,7 @@ void Referee::chooseBestCommonValue()
     int left_sector, right_sector;
     float left_point, right_point;
     
+    clear_pieces();
     for (list_itr = best_common_cfg.begin(); list_itr != best_common_cfg.end(); list_itr++)
     {
 	piece = *list_itr;

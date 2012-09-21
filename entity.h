@@ -13,6 +13,7 @@ public:
     virtual void set_piece(Piece* piece){};
     virtual string& get_id(){};
     
+    virtual CakeCut* getCakecut(){};
     inline bool isPlayer()
     {
 	if(m_entity_type == PLAYER)

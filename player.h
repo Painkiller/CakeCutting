@@ -43,6 +43,8 @@ public:
     }
     inline string& get_id(){return m_id;}
     inline map<int, float> get_evaluation_map(){return m_norm_evaluation_map;}
+    CakeCut* getCakecut();
+    
     float getRealPieceEvaluation();
     float getPieceEvaluation();
 
@@ -63,7 +65,7 @@ private:
     map<int, float> m_true_evaluation_map;
 
     Piece *m_piece_assigned;
-    
+    CakeCut* m_player_cut;
     
     void calculateCut();
 };

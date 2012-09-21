@@ -5,7 +5,10 @@
 
 Cake::Cake()
 {
-  
+    m_first_piece = new Piece();
+    m_second_piece = new Piece();
+    m_third_piece = new Piece();
+    m_middle_piece = new Piece();
 }
 
 Cake::~Cake()
@@ -66,7 +69,8 @@ void Cake::printSectors()
 void Cake::setCakeCut(Entity* cutter, int sector, float point)
 {
     {
-	CakeCut *ck = new CakeCut(cutter, sector, point);
+	CakeCut *ck = cutter->getCakecut();
+	ck->set_cakecut(cutter, sector, point);
 	
 	if(isLogEnabled())
 	{

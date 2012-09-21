@@ -7,6 +7,7 @@ Player::Player(string id, Cake* cake, int behaviour)
     m_cake = cake;
     m_entity_type = PLAYER;
     m_behaviour = behaviour;
+    m_player_cut = new CakeCut();
 }
 
 Player::~Player()
@@ -277,21 +278,27 @@ void Player::choose()
     if(isLogEnabled())
 	cout << "Player " << m_id << " evaluates the second piece of cake as: "<< second_ev <<  endl;
     
-    Piece *left_piece;
-    Piece *right_piece;
+    Piece *piece;
+    CakeCut *cut_left, *cut_right;
     
     if(first_ev > second_ev)
     {
-	left_piece = new Piece(this, new CakeCut(this, 0, 0), ck);
-	set_piece(left_piece);
+	piece = m_cake->get_piece(0);
+	cut_left = piece->get_ck_left();
+	cut_left->set_cakecut(this, 0, 0);
+	piece->set_piece(this, cut_left, ck);
 	m_cake->set_chosen(0);
     }
     else
     {
-	right_piece = new Piece(this, ck, new CakeCut(this, n_sectors - 1, 1));
-	set_piece(right_piece);
-	m_cake->set_chosen(0);
+	piece = m_cake->get_piece(1);
+	cut_right= piece->get_ck_right();
+	cut_right->set_cakecut(this, n_sectors - 1, 1);
+	piece->set_piece(this, ck, cut_right);
+	m_cake->set_chosen(1);
     }
+    set_piece(piece);
+
 }
 
 void Player::calculateCut()
@@ -339,21 +346,32 @@ float Player::getPieceEvaluation()
     return result;
 }
 
+CakeCut* Player::getCakecut()
+{
+    return m_player_cut;
+}
 void Player::take()
 {	
   
     int n_sectors = m_cake->get_size();
+    int chosen = m_cake->get_chosen();
+    Piece *piece;
+    CakeCut *cut_left, *cut_right;
 
-    Piece *left_piece;
-    Piece *right_piece;
-    
-    if(m_cake->get_chosen() == 1)
+    piece = m_cake->get_piece(chosen);
+
+    if(!chosen)
     {
-	left_piece = new Piece(this, new CakeCut(this, 0, 0), m_cake->get_cake_cut(0));
-	set_piece(left_piece);    }
+        cut_left = piece->get_ck_left();
+	cut_left->set_cakecut(this, 0, 0);
+	piece->set_piece(this, cut_left, m_cake->get_cake_cut(0));
+    }
     else
     {
-	right_piece = new Piece(this, m_cake->get_cake_cut(0), new CakeCut(this, n_sectors - 1, 1));
-	set_piece(right_piece); 
+        cut_right= piece->get_ck_right();
+	cut_right->set_cakecut(this, n_sectors - 1, 1);
+	piece ->set_piece(this, m_cake->get_cake_cut(0), cut_right);
     }
+    
+    set_piece(piece); 
 }

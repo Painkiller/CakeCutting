@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     
     int problem;
     bool skip = false;
-    int iter = 500000;
+    int iter = 1000;
     Cake *cake = new Cake();
    
     Player *player_a = new Player("A", cake, CHEATER);
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 	    cout <<"*************CUT AND CHOOSE************" << endl;
 	    cout << endl;
 	}
-	cutAndChoose(player_a, player_b, stats);
+// 	cutAndChoose(player_a, player_b, stats);
 	
 	//Clear previous cuts
 	cake->clear_cuts();
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 	    cout << endl;
 	}
 	//***Surplus Procedure**
-	surplusProcedure(player_a, player_b, referee, stats);
+// 	surplusProcedure(player_a, player_b, referee, stats);
 	
 	cake->clear_cuts();
 	referee->clear_pieces();
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 	player_c->buildEvaluationMap(problem);
 	referee->assignPlayer(player_c);
 		
-// 	equitabilityProcedure(player_a, player_b, player_c, referee, stats);
+	equitabilityProcedure(player_a, player_b, player_c, referee, stats);
 	
 	cake->clear_cuts();
 	referee->clear_pieces();
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 	player_c->clear_maps();
 	
 	referee->unassign_players();
-	if(i%100 == 0)
+	if(i % 100 == 0)
 	cout << i << endl;
     }
     
