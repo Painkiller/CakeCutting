@@ -86,8 +86,8 @@ void Player::buildEvaluationMap(int problem)
 		add_half = val_min / m_cake->countSectorOccurrences(ind_max);
 		sub_half = val_min / m_cake->countSectorOccurrences(ind_min);
 		
-		m_evaluation_map.find(ind_max)->second += add_half;
-		m_evaluation_map.find(ind_min)->second -= sub_half;
+		m_evaluation_map.find(ind_max)->second -= add_half;
+		m_evaluation_map.find(ind_min)->second += sub_half;
 		
 		for(int i = 0; i < n_sector_type; i++)
 		{

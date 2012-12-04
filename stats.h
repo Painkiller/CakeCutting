@@ -32,6 +32,13 @@ class Stats
 	  m_res = m  * 100 / n;
 	  cout << "Player wins " << m_res << "% of times in ep method" << endl;
       }
+      
+      void reset_stats()
+      {
+	  m_cc = 0;
+	  m_sp = 0;
+	  m_ep = 0;
+      }
   private:
       int m_cc;
       int m_sp;

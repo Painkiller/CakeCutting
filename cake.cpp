@@ -55,6 +55,18 @@ void Cake::buildCake(int problem)
 	}
 }
 
+void Cake::buildCake(int problem, int n, int m)
+{
+    int value;
+    m_sectors.clear();
+    for(int i = 0; i < n; i++)
+    {
+	value = rand() % m;
+	m_sectors.push_back(value);
+    }
+
+}
+
 void Cake::printSectors()
 {
     cout << "Sectors in the cake:" << endl;

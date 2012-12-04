@@ -108,6 +108,7 @@ public:
 	}
     }
     void buildCake(int problem);
+    void buildCake(int problem, int n, int m);
     void setCakeCut(Entity *cutter, int sector, float point);
     void printSectors();
     

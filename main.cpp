@@ -14,7 +14,7 @@ void equitabilityProcedure(Player *player_a, Player *player_b, Player *player_c,
 int main(int argc, char **argv) 
 {    
     srand(time(0));
-    util::enableLog(false);
+    util::enableLog(true);
     
     int problem;
     bool skip = false;
@@ -55,11 +55,13 @@ int main(int argc, char **argv)
     
     cake->printSectors();
     
-
-    
+    int n = 10;
+    int m = 2;
+    for(int k = 0; k < 10; k++)
+    {
     for(int i = 0; i < iter; i++)
     {
-
+	cake->buildCake(problem, n, m);
 	//building players' evaluations
 	
 	player_a->buildEvaluationMap(problem);
@@ -118,7 +120,9 @@ int main(int argc, char **argv)
     stats->print_cc_stats(iter);
     stats->print_sp_stats(iter);
     stats->print_ep_stats(iter);
-    
+    stats->reset_stats();
+    m++;
+    }
     return 0;
 }
 
