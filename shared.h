@@ -17,9 +17,22 @@ enum Behaviour
     CHEATER,
     HONEST
 };
-enum Problem
+enum ProblemType
 {
     RANDOM = 0,
     BOSNIA = 1
+};
+enum PieceType
+{
+    ANY = 0,
+    BEST = 1
+};
+enum StrategyType
+{
+    NONE_STRATEGY,
+    SUBMAX_ADDMIN,
+    ADDMAX_SUBMIN,
+    SWAP,
+    FLAT
 };
 #endif // SHARED_H

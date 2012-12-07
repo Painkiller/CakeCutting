@@ -33,12 +33,14 @@ public:
     }
     void unassign_players(){m_players_assigned.clear();}
     void clear_result_map(){m_result_map.clear();}
+    inline string& get_id(){return m_id;}
     
 private:
     map<Player*, map< int, float> > m_players_assigned;
     map<Entity*, int> m_pieces_assigned;
     map<vector<Piece*>, float> m_result_map;
     Piece *m_middle_piece;
+    float m_max_res;
     
     void assignPiece(Entity *owner, int sector_begin, float partial_begin,  int sector_end, float partial_end);
     bool isValidResult(float res_first, float res_second, float res_third);

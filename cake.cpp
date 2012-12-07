@@ -9,8 +9,9 @@ Cake::Cake()
     m_second_piece = new Piece();
     m_third_piece = new Piece();
     m_middle_piece = new Piece();
+    for(int i = 0; i < 3; i++)
+	m_best[i] = new Piece();
 }
-
 Cake::~Cake()
 {
 
@@ -59,9 +60,10 @@ void Cake::buildCake(int problem, int n, int m)
 {
     int value;
     m_sectors.clear();
+    m_sector_types = m;
     for(int i = 0; i < n; i++)
     {
-	value = rand() % m;
+	value = rand() % m_sector_types;
 	m_sectors.push_back(value);
     }
 

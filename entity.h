@@ -11,7 +11,7 @@ public:
     virtual void calculateTotalEvaluation(){}
     virtual void cut(Cake* cake){}
     virtual void set_piece(Piece* piece){};
-    virtual string& get_id(){};
+    virtual string& get_id(){return m_id;}
     
     virtual CakeCut* getCakecut(){};
     inline bool isPlayer()
@@ -23,6 +23,7 @@ public:
 protected:
     Cake *m_cake;
     int m_entity_type;
+    string m_id;
 };
 
 #endif // ENTITY_H

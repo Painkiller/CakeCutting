@@ -21,7 +21,7 @@ class Player : public Entity
 public:
     Player(string id, Cake* cake, int behaviour);
     virtual ~Player();
-    void buildEvaluationMap(int problem);
+    void buildEvaluationMap(ProblemType problem, StrategyType strategy = NONE_STRATEGY);
     void calculateTotalEvaluation();
     void calculatePieceEvaluation(int sect_begin, int sect_end, float point_begin, float point_end, float& result);
     void calculateTruePieceEvaluation(int sect_begin, int sect_end, float point_begin, float point_end, float& result);
@@ -41,7 +41,7 @@ public:
 	m_norm_evaluation_map.clear();
 	m_true_evaluation_map.clear();
     }
-    inline string& get_id(){return m_id;}
+// //     inline string& get_id(){return m_id;}
     inline map<int, float> get_evaluation_map(){return m_norm_evaluation_map;}
     CakeCut* getCakecut();
     
@@ -57,9 +57,7 @@ private:
     
     int m_chosen;
     int m_behaviour;
-    
-    string m_id;
-    
+        
     map<int, float> m_evaluation_map;
     map<int, float> m_norm_evaluation_map;
     map<int, float> m_true_evaluation_map;

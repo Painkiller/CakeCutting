@@ -4,6 +4,7 @@ Referee::Referee(Cake* cake)
 {
     m_cake = cake;
     m_entity_type = REFEREE;
+    m_id = "REFEREE";
 }
 
 Referee::~Referee()
@@ -27,52 +28,62 @@ void Referee::handleHalfpoints()
     vector<CakeCut*> tmp_list_ck = m_cake->get_cake_cut_list();
     vector<CakeCut*>::iterator itr;
     
+    Entity* old_player, *new_player;
     CakeCut *old_ck, *new_ck;
     bool skip = false;
-    
+    int old_sect, new_sect;
+    float old_part, new_part;
     for (itr = tmp_list_ck.begin(); itr < tmp_list_ck.end(); itr++)
     {
 	if(!skip)
 	{
+	  
 	    old_ck = *itr;
 	    skip = true;
+	    old_player = old_ck->get_cutter();
+	    old_sect = old_ck->get_cut_sector();
+	    old_part = old_ck->get_cut_point();
 	}
 	else
 	{
 	    new_ck = *itr;
-	    if(new_ck->get_cut_sector() == old_ck->get_cut_sector() && new_ck->get_cut_point() == old_ck->get_cut_point())
+	    new_player = new_ck->get_cutter();
+	    new_sect = new_ck->get_cut_sector();
+	    new_part = new_ck->get_cut_point();
+	    
+	    if(new_sect == old_sect && new_part == old_part)
 	    {	
-
-		assignPiece(new_ck->get_cutter(), 0, 0, new_ck->get_cut_sector(), new_ck->get_cut_point());
-		assignPiece(old_ck->get_cutter(), old_ck->get_cut_sector(), old_ck->get_cut_point(), m_cake->get_size() - 1, 1);
+		assignPiece(old_player, old_sect, old_part, m_cake->get_size() - 1, 1);
+		assignPiece(new_player, 0, 0, new_sect, new_part);
+		assignPiece(this, new_sect, new_part, old_sect, old_part);
 	    }
-	    else if(new_ck->get_cut_sector() == old_ck->get_cut_sector())
+	    else if(new_sect == old_sect)
 	    {
-		if(new_ck->get_cut_point() < old_ck->get_cut_point())
+		if(new_part < old_part)
 		{
-		    assignPiece(new_ck->get_cutter(), 0, 0, new_ck->get_cut_sector(), new_ck->get_cut_point());
-		    assignPiece(old_ck->get_cutter(), old_ck->get_cut_sector(), old_ck->get_cut_point(), m_cake->get_size() - 1, 1);
-		    assignPiece(this, new_ck->get_cut_sector(), new_ck->get_cut_point(), old_ck->get_cut_sector(), old_ck->get_cut_point());
+		    assignPiece(old_player, old_sect, old_part, m_cake->get_size() - 1, 1);
+		    assignPiece(new_player, 0, 0, new_sect, new_part);
+		    assignPiece(this, new_sect, new_part, old_sect, old_part);
 		}
 		else
 		{
-		    assignPiece(old_ck->get_cutter(), 0, 0, old_ck->get_cut_sector(), old_ck->get_cut_point());
-		    assignPiece(new_ck->get_cutter(), new_ck->get_cut_sector(), new_ck->get_cut_point(), m_cake->get_size() - 1, 1);
-		    assignPiece(this, old_ck->get_cut_sector(), old_ck->get_cut_point(), new_ck->get_cut_sector(), new_ck->get_cut_point());
+		    assignPiece(old_player, 0, 0, old_sect, old_part);
+		    assignPiece(new_player, new_sect, new_part, m_cake->get_size() - 1, 1);
+		    assignPiece(this, old_sect, old_part, new_sect, new_part);
 		}
 	    }
-	    else if(new_ck->get_cut_sector() < old_ck->get_cut_sector())
+	    else if(new_sect < old_sect)
 	    {
-		assignPiece(new_ck->get_cutter(), 0, 0, new_ck->get_cut_sector(), new_ck->get_cut_point());
-		assignPiece(old_ck->get_cutter(), old_ck->get_cut_sector(), old_ck->get_cut_point(), m_cake->get_size() - 1, 1);
-		assignPiece(this, new_ck->get_cut_sector(), new_ck->get_cut_point(), old_ck->get_cut_sector(), old_ck->get_cut_point());
+		assignPiece(old_player, old_sect, old_part, m_cake->get_size() - 1, 1);
+		assignPiece(new_player, 0, 0, new_sect, new_part);
+		assignPiece(this, new_sect, new_part, old_sect, old_part);
 
 	    }
 	    else
 	    {
-		assignPiece(old_ck->get_cutter(), 0, 0, old_ck->get_cut_sector(), old_ck->get_cut_point());
-		assignPiece(new_ck->get_cutter(), new_ck->get_cut_sector(),  new_ck->get_cut_point(), m_cake->get_size() - 1, 1);
-		assignPiece(this, old_ck->get_cut_sector(), old_ck->get_cut_point(), new_ck->get_cut_sector(), new_ck->get_cut_point());
+		assignPiece(old_player, 0, 0, old_sect, old_part);
+		assignPiece(new_player, new_sect,  new_part, m_cake->get_size() - 1, 1);
+		assignPiece(this, old_sect, old_part, new_sect, new_part);
 	    }
 	}
     }
@@ -159,7 +170,7 @@ void Referee::handleEquitability()
     map<Player*, map<int, float> >::iterator itr;
     Player *player;
 
-    
+    m_max_res = 0;
     for(j = 0; j < fact(size); j++)
     {
 	i = 0;
@@ -187,35 +198,36 @@ void Referee::assignPiece(Entity *owner, int sector_begin, float partial_begin, 
     CakeCut *cut_left; /*= new CakeCut(owner, sector_begin, partial_begin);*/
     CakeCut *cut_right;/* = new CakeCut(owner, sector_end, partial_end);*/
     Piece *piece;/* = new Piece(owner, cut_left, cut_right);*/
-    
     if(owner != this)
     {
 	
 	if(sector_begin == 0)
 	{
-	    piece = m_cake->get_piece(0);
+	    piece = m_cake->get_piece(0, ANY);
 	    m_pieces_assigned.insert(make_pair(owner, 0));
 	}
 	else if(sector_end == m_cake->get_size() - 1)
 	{
-	    piece = m_cake->get_piece(2);
+	    piece = m_cake->get_piece(2, ANY);
 	    m_pieces_assigned.insert(make_pair(owner, 2));
 	}
 	else
 	{
-	    piece = m_cake->get_piece(1);
+	    piece = m_cake->get_piece(1, ANY);
 	    m_pieces_assigned.insert(make_pair(owner, 1));
 	}
     }
     else
     {
-	piece = m_cake->get_piece(-1);
+	piece = m_cake->get_piece(-1, ANY);
 	m_middle_piece = piece;
     }
     cut_left = piece->get_ck_left();
     cut_right = piece->get_ck_right();
     cut_left->set_cakecut(owner, sector_begin, partial_begin);
     cut_right-> set_cakecut(owner, sector_end, partial_end);
+//     	    	    cout << owner->get_id() << sector_begin <<" " <<  sector_end << endl;
+// 		    cout << owner->get_id() << partial_begin <<" " <<  partial_end << endl;
     piece->set_piece(owner, cut_left, cut_right);
     owner->set_piece(piece);
 }
@@ -451,7 +463,6 @@ void Referee::findEqSectorMulti(int& sector_first, int& sector_second)
 	    }
 	}
 
-
     }
 
     sector_first = m;
@@ -476,9 +487,10 @@ void Referee::findEqPointMulti(int first, int second)
     
     fix_one = m;
     fix_two = n;
-    
+    	int iter = 0;
     while(!found)
     {
+// 	    cout << fix_one << " ";
 	while( (r - l) > MIN_ERR)
 	{
 	    for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
@@ -543,11 +555,32 @@ void Referee::findEqPointMulti(int first, int second)
 	    {
 		if( fabs(res_first - res_second) > MAX_ERR )
 		{
-		  if(res_first > res_second)
-		      sector_first = sector_first - 1;
-		  else if(res_first < res_second)
-		    sector_first = sector_first + 1;
-		}
+		    if( fabs(res_second - res_third) > MAX_ERR )
+		    {
+			if(res_first > res_second && res_second > res_third)
+			{
+			    sector_first = sector_first - 1;
+			}
+			else if(res_first < res_second && res_second < res_third)
+			{
+			    sector_second = sector_second + 1;
+			}
+			else if(res_first < res_second && res_second > res_third)
+			{
+			    if(res_first > res_third)
+				sector_second = sector_second - 1;
+			    else
+				sector_first = sector_first + 1;
+			}
+		    }
+		    else
+		    {
+			if(res_first > res_second)
+			    sector_first = sector_first - 1;
+			else
+			    sector_first = sector_first + 1;
+		    }
+		}	
 		else if( fabs(res_second - res_third) > MAX_ERR )
 		{
 		  if(res_third < res_second)
@@ -566,7 +599,13 @@ void Referee::findEqPointMulti(int first, int second)
 	    fix_one = m;
 	    fix_two = n;
 	}
+		    if(iter < 100)
+		iter ++;
+	    else
+	      found = true;
     }
+//     cout <<endl;
+//     cout << endl;
     if(isLogEnabled())
     {
 	cout << "******"<<  endl;
@@ -581,7 +620,7 @@ void Referee::findEqPointMulti(int first, int second)
     for (itr = m_players_assigned.begin(); itr != m_players_assigned.end(); itr++)
     {
 	player = itr->first;
-	piece = m_cake->get_piece(m_pieces_assigned.find(player)->second);
+	piece = m_cake->get_piece(m_pieces_assigned.find(player)->second, ANY);
 	cut_left = piece->get_ck_left();
 	cut_right = piece->get_ck_right();
 	
@@ -605,7 +644,25 @@ void Referee::findEqPointMulti(int first, int second)
 	piece->set_piece(player, cut_left, cut_right);
 	pieces_list.push_back(piece);
     }
-    m_result_map.insert(make_pair(pieces_list, res_first));
+    if(res_first > m_max_res)
+    {
+	m_max_res = res_first;
+	vector<Piece* >::iterator itr_p;
+	Piece *tmp_piece, *best_piece;
+	int k = 0;
+	for(itr_p = pieces_list.begin(); itr_p != pieces_list.end(); itr_p++)
+	{
+	    tmp_piece = *itr_p;
+	    best_piece = m_cake->get_piece(k, BEST);
+	    cut_left = best_piece->get_ck_left();
+	    cut_right = best_piece->get_ck_right();
+	    cut_left->set_cakecut(tmp_piece->get_owner(), tmp_piece->get_ck_left()->get_cut_sector(), tmp_piece->get_ck_left()->get_cut_point());
+	    cut_right->set_cakecut(tmp_piece->get_owner(), tmp_piece->get_ck_right()->get_cut_sector(), tmp_piece->get_ck_right()->get_cut_point());
+	    best_piece->set_piece(tmp_piece->get_owner(), cut_left, cut_right);
+	    k++;
+	}
+    }
+//     m_result_map.insert(make_pair(pieces_list, res_first));
 }
 
 bool Referee::isValidResult(float res_first, float res_second, float res_third)
@@ -625,15 +682,22 @@ void Referee::chooseBestCommonValue()
 
     vector<Piece*> best_common_cfg;
     
-    for (map_itr = m_result_map.begin(); map_itr != m_result_map.end(); map_itr++)
-    {
-	tmp_res = map_itr->second;
-	if(tmp_res > max_res)
-	{
-	    max_res = tmp_res;
-	    best_common_cfg = map_itr->first;
-	}
-    }
+//     for (map_itr = m_result_map.begin(); map_itr != m_result_map.end(); map_itr++)
+//     {
+// 	float ckp1,ckp2;
+// 	float cks1, cks2;
+// 	tmp_res = map_itr->second;
+// 	if(tmp_res > max_res)
+// 	{
+// 	    max_res = tmp_res;
+// 	    best_common_cfg = map_itr->first;
+// 	    ckp1 = map_itr->first[0]->get_ck_left()->get_cut_point();
+// 	     ckp2 = map_itr->first[0]->get_ck_right()->get_cut_point();
+// 	     cks1 = map_itr->first[0]->get_ck_left()->get_cut_sector();
+// 	     cks1 = map_itr->first[0]->get_ck_right()->get_cut_sector();
+// // 	    cout << max_res<< " "<<  cks1 << " " << ckp1 << " " << cks2 << " " << cks2<<endl;
+// 	}
+//     }
     
     Piece *piece;
     Entity *owner;
@@ -641,9 +705,10 @@ void Referee::chooseBestCommonValue()
     float left_point, right_point;
     
     clear_pieces();
-    for (list_itr = best_common_cfg.begin(); list_itr != best_common_cfg.end(); list_itr++)
+//     for (list_itr = best_common_cfg.begin(); list_itr != best_common_cfg.end(); list_itr++)
+    for(int k = 0; k < 3; k++)
     {
-	piece = *list_itr;
+	piece = m_cake->get_piece(k, BEST);
 	owner = piece->get_owner();
 	left_sector = piece->get_left_cut_sector();
 	right_sector = piece->get_right_cut_sector();

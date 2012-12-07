@@ -93,18 +93,38 @@ public:
     }
     inline void set_chosen(int chosen){m_chosen = chosen;}
     inline int get_chosen(){return m_chosen;}
-    inline Piece* get_piece(int num)
+    inline Piece* get_piece(int num, PieceType type)
     {
-	switch(num)
+	switch(type)
 	{
-	   case 0:
-	      return m_first_piece;
-	   case 1:
-	      return m_second_piece;
-	   case 2:
-	      return m_third_piece;	  
-	   default :
-	      return m_middle_piece;
+	    case ANY:
+	    {
+		switch(num)
+		{
+		  case 0:
+		      return m_first_piece;
+		  case 1:
+		      return m_second_piece;
+		  case 2:
+		      return m_third_piece;	  
+		  default :
+		      return m_middle_piece;
+		}
+	    }
+	    break;
+	    case BEST:
+	    {
+		switch(num)
+		{
+		  case 0:
+		  case 1:
+		  case 2:
+		      return m_best[num];	  
+		  default :
+		      return m_middle_piece;
+		}
+	    }
+	    break;
 	}
     }
     void buildCake(int problem);
@@ -128,5 +148,8 @@ private:
     Piece *m_second_piece;
     Piece *m_third_piece;
     Piece *m_middle_piece;
+    Piece *m_best[3];
+//     Piece *m_best_second;
+//     Piece *m_best_third;
 };
 #endif // CAKE_H
