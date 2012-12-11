@@ -35,4 +35,18 @@ enum StrategyType
     SWAP,
     FLAT
 };
+enum StatType
+{
+    MAP_STAT,
+    PIECE_STAT,
+    PLAYER_STAT,
+    COMPARE_STAT
+};
+
+enum MethodType
+{
+    CC_METHOD,
+    SP_METHOD,
+    EP_METHOD
+};
 #endif // SHARED_H
