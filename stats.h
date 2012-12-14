@@ -154,6 +154,21 @@ class Stats
       }
       void store(float fake_result){m_fake_result = fake_result;}
       float load(){return m_fake_result;}
+      float get_gap(MethodType method)
+      {
+	  switch(method)
+	  {
+	    case CC_METHOD:
+		return m_compare_gap_cc;
+	    break;
+	    case SP_METHOD:
+		return m_compare_gap_sp;
+	    break;
+	    case EP_METHOD:
+		return m_compare_gap_ep;
+	    break;
+	  }
+      }
   private:
       int m_cc_map, m_sp_map, m_ep_map;
       int m_cc_piece, m_sp_piece, m_ep_piece;
