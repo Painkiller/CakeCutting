@@ -81,8 +81,8 @@ int main(int argc, char **argv)
 		    no_strategy = true;
 		}
 		
-		player_a->buildEvaluationMap(problem, FLAT, no_strategy);
-		player_b->buildEvaluationMap(problem, ADDMAX_SUBMIN, no_strategy);
+		player_a->buildEvaluationMap(problem, SUBMAX_ADDMIN, no_strategy);
+		player_b->buildEvaluationMap(problem, NONE_STRATEGY, no_strategy);
 		
 		referee->assignPlayer(player_a);
 		referee->assignPlayer(player_b);
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 		    cout << endl;
 		}
 		
-		player_c->buildEvaluationMap(problem, SUBMAX_ADDMIN, no_strategy);
+		player_c->buildEvaluationMap(problem, NONE_STRATEGY, no_strategy);
 		referee->assignPlayer(player_c);
 			
         	equitabilityProcedure(player_a, player_b, player_c, referee, stats_a, stats_b, stats_c, j);
@@ -205,26 +205,26 @@ void cutAndChoose(Player *player_a, Player *player_b, Stats *stats_a, Stats *sta
 	else
 	    stats_b->inc(false, player_gap, PLAYER_STAT, CC_METHOD);
 	
-	stats_a->store(player_a->getRealPieceEvaluation(player_a));
-	stats_b->store(player_b->getRealPieceEvaluation(player_b));
+	stats_a->store(player_a->getRealPieceEvaluation(player_a), CC_METHOD);
+	stats_b->store(player_b->getRealPieceEvaluation(player_b), CC_METHOD);
     }
     else
     {
-	compare_gap = stats_a->load() - player_a->getRealPieceEvaluation(player_a);
+	compare_gap = stats_a->load(CC_METHOD) - player_a->getRealPieceEvaluation(player_a);
 	if(compare_gap > 0)
 	    stats_a->inc(true, compare_gap, COMPARE_STAT, CC_METHOD);
 	else
 	    stats_a->inc(false, compare_gap, COMPARE_STAT, CC_METHOD);
 	
-	util::print_in_file(0, CC_METHOD, stats_a->get_gap(CC_METHOD));
+	util::print_in_file(0, CC_METHOD, stats_a->get_gap(CC_METHOD), stats_a->get_perc(CC_METHOD));
 	
-	compare_gap = stats_b->load() - player_b->getRealPieceEvaluation(player_b);
+	compare_gap = stats_b->load(CC_METHOD) - player_b->getRealPieceEvaluation(player_b);
 	if(compare_gap > 0)
 	    stats_b->inc(true, compare_gap, COMPARE_STAT, CC_METHOD);
 	else
 	    stats_b->inc(false, compare_gap, COMPARE_STAT, CC_METHOD);
 	
-	util::print_in_file(1, CC_METHOD, stats_b->get_gap(CC_METHOD));
+	util::print_in_file(1, CC_METHOD, stats_b->get_gap(CC_METHOD), stats_b->get_perc(CC_METHOD));
     }
 }
 
@@ -282,26 +282,26 @@ void surplusProcedure(Player *player_a, Player *player_b, Referee *referee, Stat
 	else
 	    stats_b->inc(false, player_gap, PLAYER_STAT, SP_METHOD);
 	    
-	stats_a->store(player_a->getRealPieceEvaluation(player_a));
-	stats_b->store(player_b->getRealPieceEvaluation(player_b));
+	stats_a->store(player_a->getRealPieceEvaluation(player_a), SP_METHOD);
+	stats_b->store(player_b->getRealPieceEvaluation(player_b), SP_METHOD);
     }
     else
     {
-	compare_gap = stats_a->load() - player_a->getRealPieceEvaluation(player_a);
+	compare_gap = stats_a->load(SP_METHOD) - player_a->getRealPieceEvaluation(player_a);
 	if(compare_gap > 0)
 	    stats_a->inc(true, compare_gap, COMPARE_STAT, SP_METHOD);
 	else
 	    stats_a->inc(false, compare_gap, COMPARE_STAT, SP_METHOD);
 	
-	util::print_in_file(0, SP_METHOD, stats_a->get_gap(SP_METHOD));
+	util::print_in_file(0, SP_METHOD, stats_a->get_gap(SP_METHOD), stats_a->get_perc(SP_METHOD));
 		
-	compare_gap = stats_b->load() - player_b->getRealPieceEvaluation(player_b);
+	compare_gap = stats_b->load(SP_METHOD) - player_b->getRealPieceEvaluation(player_b);
 	if(compare_gap > 0)
 	    stats_b->inc(true, compare_gap, COMPARE_STAT, SP_METHOD);
 	else
 	    stats_b->inc(false, compare_gap, COMPARE_STAT, SP_METHOD);
 	
-	util::print_in_file(1, SP_METHOD, stats_b->get_gap(SP_METHOD));
+	util::print_in_file(1, SP_METHOD, stats_b->get_gap(SP_METHOD), stats_b->get_perc(SP_METHOD));
     }
 }
 
@@ -330,34 +330,35 @@ void equitabilityProcedure(Player *player_a, Player *player_b, Player *player_c,
 	else
 	    stats_c->inc(false, map_gap, MAP_STAT, EP_METHOD);
 	
-	stats_a->store(player_a->getRealPieceEvaluation(player_a));
-	stats_b->store(player_b->getRealPieceEvaluation(player_b));
-	stats_c->store(player_c->getRealPieceEvaluation(player_c));
+	stats_a->store(player_a->getRealPieceEvaluation(player_a), EP_METHOD);
+	stats_b->store(player_b->getRealPieceEvaluation(player_b), EP_METHOD);
+	stats_c->store(player_c->getRealPieceEvaluation(player_c), EP_METHOD);
     }
     else
     {
-      	compare_gap = stats_a->load() - player_a->getRealPieceEvaluation(player_a);
+      	compare_gap = stats_a->load(EP_METHOD) - player_a->getRealPieceEvaluation(player_a);
 	if(compare_gap > 0)
 	    stats_a->inc(true, compare_gap, COMPARE_STAT, EP_METHOD);
 	else
 	    stats_a->inc(false, compare_gap, COMPARE_STAT, EP_METHOD);
 	
-	util::print_in_file(0, EP_METHOD, stats_a->get_gap(EP_METHOD));
+	util::print_in_file(0, EP_METHOD, stats_a->get_gap(EP_METHOD), stats_a->get_perc(EP_METHOD));
 		
-	compare_gap = stats_b->load() - player_b->getRealPieceEvaluation(player_b);
+	compare_gap = stats_b->load(EP_METHOD) - player_b->getRealPieceEvaluation(player_b);
 	if(compare_gap > 0)
 	    stats_b->inc(true, compare_gap, COMPARE_STAT, EP_METHOD);
 	else
 	    stats_b->inc(false, compare_gap, COMPARE_STAT, EP_METHOD);
 	
-	util::print_in_file(1, EP_METHOD, stats_b->get_gap(EP_METHOD));
+	util::print_in_file(1, EP_METHOD, stats_b->get_gap(EP_METHOD), stats_b->get_perc(EP_METHOD));
 		
-	compare_gap = stats_c->load() - player_c->getRealPieceEvaluation(player_c);
+	compare_gap = stats_c->load(EP_METHOD) - player_c->getRealPieceEvaluation(player_c);
 	if(compare_gap > 0)
 	    stats_c->inc(true, compare_gap, COMPARE_STAT, EP_METHOD);
 	else
 	    stats_c->inc(false, compare_gap, COMPARE_STAT, EP_METHOD);
 	
-	util::print_in_file(2, EP_METHOD, stats_c->get_gap(EP_METHOD));
+	stats_c->get_perc(CC_METHOD);
+	util::print_in_file(2, EP_METHOD, stats_c->get_gap(EP_METHOD), stats_c->get_perc(EP_METHOD));
     }
 }

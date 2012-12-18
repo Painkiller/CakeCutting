@@ -11,7 +11,7 @@ class Stats
       Stats() : m_cc_map(0), m_sp_map(0), m_ep_map(0), 
 		m_cc_piece(0), m_sp_piece(0), m_ep_piece(0),
 		m_cc_player(0), m_sp_player(0), m_ep_player(0),
-		m_fake_result(0){};
+		m_fake_result_cc(0), m_fake_result_sp(0),m_fake_result_ep(0),m_iter(0){};
       inline void inc(bool success, float gap, StatType stat, MethodType method)
       {
 	  switch(method)
@@ -132,7 +132,9 @@ class Stats
       }
       void reset_stats()
       {
-	  m_fake_result = 0;
+	  m_fake_result_cc = 0;
+	  m_fake_result_sp = 0;
+	  m_fake_result_ep = 0;
 	  m_cc_map = 0;
 	  m_sp_map = 0;
 	  m_ep_map = 0;
@@ -151,9 +153,44 @@ class Stats
 	  m_player_gap_cc = 0;
 	  m_player_gap_sp = 0;
 	  m_player_gap_ep = 0;
+	  m_iter = 0;
+	  m_cc_compare = 0;
+	  m_sp_compare = 0;
+	  m_ep_compare = 0;
+	  m_compare_gap_cc = 0;
+	  m_compare_gap_sp = 0 ;
+	  m_compare_gap_ep = 0 ;
       }
-      void store(float fake_result){m_fake_result = fake_result;}
-      float load(){return m_fake_result;}
+      void store(float fake_result, MethodType method)
+      {
+	  switch(method)
+	  {
+	    case CC_METHOD:
+		m_fake_result_cc = fake_result;
+	    break;
+	    case SP_METHOD:
+		 m_fake_result_sp = fake_result;
+	    break;
+	    case EP_METHOD:
+		 m_fake_result_ep = fake_result;
+	    break;
+	  }
+      }
+      float load(MethodType method)
+      {	  
+	  switch(method)
+	  {
+	    case CC_METHOD:
+		return m_fake_result_cc;
+	    break;
+	    case SP_METHOD:
+		return m_fake_result_sp;
+	    break;
+	    case EP_METHOD:
+		return m_fake_result_ep;
+	    break;
+	  }
+      }
       float get_gap(MethodType method)
       {
 	  switch(method)
@@ -162,12 +199,30 @@ class Stats
 		return m_compare_gap_cc;
 	    break;
 	    case SP_METHOD:
-		return m_compare_gap_sp;
+		return m_compare_gap_sp ;
 	    break;
 	    case EP_METHOD:
-		return m_compare_gap_ep;
+		return m_compare_gap_ep ;
 	    break;
 	  }
+      }
+      float get_perc(MethodType method)
+      {
+	  float perc;
+	  switch(method)
+	  {
+	    case CC_METHOD:
+		m_iter++;
+		perc = (float)m_cc_compare * 100 / (float)m_iter;
+	    break;
+	    case SP_METHOD:
+		perc = (float)m_sp_compare * 100 / (float)m_iter;
+	    break;
+	    case EP_METHOD:
+		perc = (float)m_ep_compare * 100 / (float)m_iter;
+	    break;
+	  }
+	  return perc;
       }
   private:
       int m_cc_map, m_sp_map, m_ep_map;
@@ -179,7 +234,8 @@ class Stats
       float m_player_gap_cc, m_player_gap_sp, m_player_gap_ep;
       float m_compare_gap_cc, m_compare_gap_sp, m_compare_gap_ep;
       float m_res;
-      float m_fake_result;
+      float m_fake_result_cc, m_fake_result_sp, m_fake_result_ep;
+      int m_iter;
      
       void print_cc_stats(int iter)
       {

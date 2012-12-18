@@ -24,7 +24,7 @@ void util::enableLog(bool var)
     log_enabled = var;
 }
 
-void util::print_in_file(int id, MethodType method, float res)
+void util::print_in_file(int id, MethodType method, float res, float perc)
 {
     switch(method)
     {
@@ -34,9 +34,11 @@ void util::print_in_file(int id, MethodType method, float res)
 	    {
 		case 0:
 		  CC_A << res << " " << std::endl;
+		  CC_A_P << perc << " " << std::endl;
 		  break;
 		case 1:
 		  CC_B << res << " " << std::endl;
+		  CC_B_P << perc << " " << std::endl;
 		  break;
 	    }
 	}
@@ -47,9 +49,11 @@ void util::print_in_file(int id, MethodType method, float res)
 	    {
 		case 0:
 		  SP_A << res << " " << std::endl;
+		  SP_A_P << perc << " " << std::endl;
 		  break;
 		case 1:
 		  SP_B << res << " " << std::endl;
+		  SP_B_P << perc << " " << std::endl;
 		  break;
 	    }
 	}
@@ -60,12 +64,15 @@ void util::print_in_file(int id, MethodType method, float res)
 	    {
 		case 0:
 		  EP_A << res << " " << std::endl;
+		  EP_A_P << perc << " " << std::endl;
 		  break;
 		case 1:
 		  EP_B << res << " " << std::endl;
+		  EP_B_P << perc << " " << std::endl;
 		  break;
 		case 2:
 		  EP_C << res << " " << std::endl;
+		  EP_C_P << perc << " " << std::endl;
 		  break;
 	    }
 	}
